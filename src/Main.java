@@ -4,6 +4,8 @@ public class Main {
 
     //vars
     private Scanner scanner;
+    private boolean isVerifiedUser;
+    private String userName;
 
     public static void main(String[] args) {
 
