@@ -16,12 +16,12 @@ public class Main {
     /**
      * Constructor
      */
-    public Main(){
+    Main(){
         this.scanner = new Scanner(System.in);
         this.user = null;
     }
 
-    public void run(){
+    void run(){
 
         while(true){
 
@@ -45,16 +45,17 @@ public class Main {
 
     }
 
-    public void displayMenu(){
-        //todo
-        System.out.println("TODO");
-        System.out.println("Say something.");
+    void displayMenu(){
+
+        System.out.println("TODO");//todo
     }
 
-    public void performAction(){
-        //todo
-        System.out.println("TODO");
+    void performAction(){
+
+        System.out.println("TODO");//todo
     }
+
+
 
     /** Initializes the user object
      *
@@ -64,17 +65,39 @@ public class Main {
      */
     void verifyUser(String n, String pwd){
         /*
-                        Sql
+                    Sql
 
-            Find the user with name.
-            Check if the password is pwd.
+        Find the user with name.
 
-            Initialize this.user object if
-            verification is achieved.
+
+        FROM DELIVERABLE 1:
+        Each user will have a unique userID.
+        They will use an email, and password used for login.
+        Each user will have a cupboardID that uniquely identifies their cupboard.
+        Cupboards will store ingredientID’s for each ingredient that a user currently has in their cupboard.
 
          */
         String cupboardID = "1337";
-        this.user = new User(n,cupboardID); //TODO
+        this.user = new User(n,cupboardID);
+        System.out.println("TODO");//TODO
+
+    }
+
+    void listRecipes(){
+
+    }
+
+    void addRecipes(){
+
+    }
+
+    void removeRecipe(){}
+
+    void getShoppingList(){
+
+    }
+
+    void getAvailableRecipes(){
 
     }
 
