@@ -32,7 +32,6 @@ public class Main {
 
     }
 
-
     public void displayMenu(){
         //todo
         System.out.println("TODO");
@@ -43,6 +42,29 @@ public class Main {
         //todo
         System.out.println("TODO");
     }
+
+    /**
+     *
+     * @param n
+     * @param pwd
+     * @return
+     */
+    boolean verifyUser(String n, String pwd){
+        /*
+                        Sql
+
+            Find the user with name.
+            Check if the password is pwd
+            return true/false depending.
+
+         */
+
+        //TODO
+
+        return false;
+    }
+
+
 
 
 }
