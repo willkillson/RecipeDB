@@ -6,6 +6,7 @@ public class Main {
     private Scanner scanner;
     private boolean isVerifiedUser;
     private String userName;
+    private String cupboardId;
 
     public static void main(String[] args) {
 
