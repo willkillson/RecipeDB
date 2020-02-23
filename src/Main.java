@@ -1,8 +1,45 @@
+import java.util.Scanner;
+
 public class Main {
 
+    //vars
+    private Scanner scanner;
+
     public static void main(String[] args) {
-	// write your code here
-        System.out.println("Hello world!");
+
+        new Main().run();
+
+    }
+
+    /**
+     * Constructor
+     */
+    public Main(){
+        this.scanner = new Scanner(System.in);
+
+    }
+
+    public void run(){
+
+        while(true){
+            displayMenu();
+            String out = scanner.nextLine();
+            performAction();
+        }
+
+
+    }
+
+
+    public void displayMenu(){
+        //todo
+        System.out.println("TODO");
+        System.out.println("Say something.");
+    }
+
+    public void performAction(){
+        //todo
+        System.out.println("TODO");
     }
 
 
