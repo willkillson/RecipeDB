@@ -85,9 +85,18 @@ public class Main {
 
     void listRecipes(){
 
+        /*
+
+            select *
+            from recipes;
+
+         */
+
     }
 
     void addRecipes(){
+
+        
 
     }
 
