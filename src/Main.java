@@ -4,9 +4,8 @@ public class Main {
 
     //vars
     private Scanner scanner;
-    private boolean isVerifiedUser;
-    private String userName;
-    private String cupboardId;
+    private User user;
+
 
     public static void main(String[] args) {
 
@@ -19,10 +18,23 @@ public class Main {
      */
     public Main(){
         this.scanner = new Scanner(System.in);
-
+        this.user = null;
     }
 
     public void run(){
+
+        while(true){
+
+            System.out.print("UserName:");
+            String name = scanner.nextLine();
+            System.out.print("Password:");
+            String password = scanner.nextLine();
+            verifyUser(name,password);
+
+            if(this.user!=null){
+                break;
+            }
+        }
 
         while(true){
             displayMenu();
@@ -44,25 +56,26 @@ public class Main {
         System.out.println("TODO");
     }
 
-    /**
+    /** Initializes the user object
      *
      * @param n
      * @param pwd
      * @return
      */
-    boolean verifyUser(String n, String pwd){
+    void verifyUser(String n, String pwd){
         /*
                         Sql
 
             Find the user with name.
-            Check if the password is pwd
-            return true/false depending.
+            Check if the password is pwd.
+
+            Initialize this.user object if
+            verification is achieved.
 
          */
+        String cupboardID = "1337";
+        this.user = new User(n,cupboardID); //TODO
 
-        //TODO
-
-        return false;
     }
 
 
