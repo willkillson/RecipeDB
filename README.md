@@ -1,5 +1,9 @@
 # SER322
 
-Kevin Changeasdfasdfsa
+Command line arguments are,
 
-Aagain
+<ipaddress> <drivername> <dbname> <dbadminName> <dbadminPassword>
+
+Example,
+
+"192.168.1.3" "com.mysql.jdbc.Driver" "RECIPEDB" "kevin" "6016"

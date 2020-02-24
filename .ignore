@@ -1,4 +1,4 @@
-# file: ~/.gitignore_global
+# file: ~/.gitignore_globaltime
 .DS_Store
 .idea
 .out
