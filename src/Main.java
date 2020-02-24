@@ -52,8 +52,8 @@ public class Main {
             String name = scanner.nextLine();
             System.out.print("Password:");
             String password = scanner.nextLine();*/
-            String name = "p";//todo remove this for auth
-            String password = "p";
+            String name = "38CA10BA";//todo remove this for auth
+            String password = "03D64A6A";//automatic login
             verifyUser(name,password);
 
             if(this.user!=null){
@@ -118,9 +118,55 @@ public class Main {
             verification is achieved.
 
          */
-        String cupboardID = "1337";
-        this.user = new User(n,cupboardID);
-        System.out.println("TODO");//TODO
+        try{
+            server.connect();
+            server.stmt = server.conn.createStatement();
+            server.ps = server.conn.prepareStatement("select userID, cupboardID, cartID\n" +
+                    "from USER\n" +
+                    "where USER.userID=?\n" +
+                    "AND USER.password = ?;");
+            server.ps.setString(1,n);
+            server.ps.setString(2,pwd);
+
+            server.rs = server.ps.executeQuery();
+            server.rs.next();
+            String userId = server.rs.getString("userID");
+            String cupboardID = server.rs.getString("cupboardID");
+            String cartID = server.rs.getString("cartID");
+
+            if(userId==null){
+                System.out.println("Error: invalid username/password");
+                return;
+            }
+            if(cupboardID==null){
+                System.out.println("Error: invalid username/password");
+                return;
+            }
+            if(cartID==null){
+                System.out.println("Error: invalid username/password");
+                return;
+            }
+
+            this.user = new User(userId,cupboardID,cartID);
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                this.server.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+
+        }
+
+
+
+
 
     }
 
