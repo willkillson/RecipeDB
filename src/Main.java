@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -6,6 +7,7 @@ public class Main {
     //vars
     private Scanner scanner;
     private User user;
+    private ServerDB server;
 
     enum menu_encoder{
         show_cupboard,
@@ -33,16 +35,25 @@ public class Main {
         selector.put("show_cupboard", menu_encoder.show_cupboard);
         selector.put("show_recipe_information", menu_encoder.show_recipe_information);
 
+        this.server = new ServerDB("192.168.1.3","com.mysql.jdbc.Driver","RECIPEDB","kevin","6016");
+
+
     }
 
     public void run(){
 
+
+
+
+
         while(true){
 
-            System.out.print("UserName:");
+/*            System.out.print("UserName:");
             String name = scanner.nextLine();
             System.out.print("Password:");
-            String password = scanner.nextLine();
+            String password = scanner.nextLine();*/
+            String name = "p";//todo remove this for auth
+            String password = "p";
             verifyUser(name,password);
 
             if(this.user!=null){
@@ -77,8 +88,7 @@ public class Main {
         switch(s){
             case show_cupboard:
             {
-                //todo
-                System.out.println("TODO: show_cupboard");
+                this.showCupboard();
                 break;
             }
             case show_recipe_information:
@@ -112,6 +122,43 @@ public class Main {
         this.user = new User(n,cupboardID);
         System.out.println("TODO");//TODO
 
+    }
+
+    void showCupboard(){
+
+        try{
+            server.connect();
+            server.stmt = server.conn.createStatement();
+            server.rs = server.stmt.executeQuery("select STORES.ingredientID\n" +
+                    "from USER, STORES\n" +
+                    "where USER.userID=\"38CA10BA\"\n" +
+                    "AND USER.cupboardID = \"CB1FD927\"\n" +
+                    "AND STORES.cupboardID = USER.cupboardID;");
+
+            String __Ingredient = "ingredientID";
+            String _Ingredient = String.format("%-10s", __Ingredient);
+
+            System.out.println(_Ingredient);
+
+            while (server.rs.next()) {
+                _Ingredient = String.format("%-10s", server.rs.getString("ingredientID"));
+                System.out.println(_Ingredient);
+            }
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            try{
+                this.server.close();
+            }
+            catch (SQLException se) {
+                se.printStackTrace();
+            }
+
+        }
     }
 
     void listRecipes(){
