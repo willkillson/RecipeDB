@@ -63,11 +63,8 @@
       <option name="presentableId" value="Default" />
       <updated>1582492736086</updated>
       <workItem from="1582492738443" duration="9000" />
-<<<<<<< HEAD
       <workItem from="1582493164872" duration="4123000" />
-=======
       <workItem from="1582493164872" duration="1722000" />
->>>>>>> parent of c2d817e... adding method with comment
     </task>
     <task id="LOCAL-00001" summary="Initial">
       <created>1582493187200</created>
@@ -94,7 +91,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -109,22 +108,22 @@
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
     <state x="532" y="130" width="852" height="807" key="CommitChangelistDialog2/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582493257627" />
-    <state width="1878" height="262" key="GridCell.Tab.0.bottom" timestamp="1582494812580">
+    <state width="1878" height="262" key="GridCell.Tab.0.bottom" timestamp="1582521274341">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
-    <state width="1878" height="262" key="GridCell.Tab.0.bottom/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582494812580" />
-    <state width="1878" height="262" key="GridCell.Tab.0.center" timestamp="1582494812580">
+    <state width="1878" height="262" key="GridCell.Tab.0.bottom/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582521274341" />
+    <state width="1878" height="262" key="GridCell.Tab.0.center" timestamp="1582521274341">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
-    <state width="1878" height="262" key="GridCell.Tab.0.center/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582494812580" />
-    <state width="1878" height="262" key="GridCell.Tab.0.left" timestamp="1582494812580">
+    <state width="1878" height="262" key="GridCell.Tab.0.center/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582521274341" />
+    <state width="1878" height="262" key="GridCell.Tab.0.left" timestamp="1582521274341">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
-    <state width="1878" height="262" key="GridCell.Tab.0.left/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582494812580" />
-    <state width="1878" height="262" key="GridCell.Tab.0.right" timestamp="1582494812580">
+    <state width="1878" height="262" key="GridCell.Tab.0.left/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582521274341" />
+    <state width="1878" height="262" key="GridCell.Tab.0.right" timestamp="1582521274341">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>
-    <state width="1878" height="262" key="GridCell.Tab.0.right/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582494812580" />
+    <state width="1878" height="262" key="GridCell.Tab.0.right/0.31.1920.1000/1920.0.1920.1080@0.31.1920.1000" timestamp="1582521274341" />
     <state x="737" y="452" width="445" height="162" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1582493271702">
       <screen x="0" y="31" width="1920" height="1000" />
     </state>

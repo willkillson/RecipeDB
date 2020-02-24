@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -5,6 +6,12 @@ public class Main {
     //vars
     private Scanner scanner;
     private User user;
+
+    enum menu_encoder{
+        show_cupboard,
+        show_recipe_information
+    }
+    HashMap<String, menu_encoder> selector;
 
 
     public static void main(String[] args) {
@@ -19,6 +26,13 @@ public class Main {
     public Main(){
         this.scanner = new Scanner(System.in);
         this.user = null;
+
+        //build menu encoder
+        this.selector = new HashMap<>();
+
+        selector.put("show_cupboard", menu_encoder.show_cupboard);
+        selector.put("show_recipe_information", menu_encoder.show_recipe_information);
+
     }
 
     public void run(){
@@ -39,7 +53,8 @@ public class Main {
         while(true){
             displayMenu();
             String out = scanner.nextLine();
-            performAction();
+            System.out.println();
+            performAction(out);
         }
 
 
@@ -47,14 +62,33 @@ public class Main {
 
     public void displayMenu(){
         //todo
-        System.out.println("TODO");
-        System.out.println("Say something.");
+        System.out.println("***Menu Items***");
+        System.out.println("show_cupboard");
+        System.out.println("show_recipe_information");
     }
 
-    public void performAction(){
-        //todo
-        System.out.println("TODO");
-        //
+    public void performAction(String a){
+        menu_encoder s = this.selector.get(a);
+
+        if(s==null){
+            System.out.println("Error: Invalid menu selection.");
+            return;
+        }
+        switch(s){
+            case show_cupboard:
+            {
+                //todo
+                System.out.println("TODO: show_cupboard");
+                break;
+            }
+            case show_recipe_information:
+            {
+                //todo
+                System.out.println("TODO: show_recipe_information");
+                break;
+            }
+        }
+
     }
 
     /** Initializes the user object
