@@ -54,6 +54,7 @@ public class Main {
     public void performAction(){
         //todo
         System.out.println("TODO");
+        //
     }
 
     /** Initializes the user object
@@ -74,7 +75,6 @@ public class Main {
 
          */
         String cupboardID = "1337";
-<<<<<<< HEAD
         this.user = new User(n,cupboardID);
         System.out.println("TODO");//TODO
 
@@ -91,6 +91,10 @@ public class Main {
 
     }
 
+    void displayLocalIngredients(){
+
+    }
+
     void addRecipes(){
 
         
@@ -104,9 +108,8 @@ public class Main {
     }
 
     void getAvailableRecipes(){
-=======
-        this.user = new User(n,cupboardID); //TODO
->>>>>>> parent of c2d817e... adding method with comment
+
+         //TODO
 
     }
 
