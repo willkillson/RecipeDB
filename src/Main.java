@@ -137,25 +137,23 @@ public class Main {
             server.ps.setString(2,pwd);
 
             server.rs = server.ps.executeQuery();
-            server.rs.next();
+
+            /*
+                Testing whether a result set is empty.
+            https://javarevisited.blogspot.com/2016/10/how-to-check-if-resultset-is-empty-in-Java-JDBC.html
+             */
+
+            if(server.rs.next()==false){
+                System.out.println("Error: invalid username/password");
+                return;
+            }
             String userId = server.rs.getString("userID");
             String cupboardID = server.rs.getString("cupboardID");
             String cartID = server.rs.getString("cartID");
 
-            if(userId==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-            if(cupboardID==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-            if(cartID==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-
             this.user = new User(userId,cupboardID,cartID);
+
+            System.out.println("\nLoged in as: "+this.user.userName+'\n');
 
 
         }
