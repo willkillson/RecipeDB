@@ -1,7 +1,7 @@
 public class User {
-    private String userName;
-    private String cupboardId;
-    private String cartID;
+    public String userName;
+    public String cupboardId;
+    public String cartID;
 
 
     public User(String userName, String cupboardId, String cartID){

@@ -120,7 +120,6 @@ public class Main {
          */
         try{
             server.connect();
-            server.stmt = server.conn.createStatement();
             server.ps = server.conn.prepareStatement("select userID, cupboardID, cartID\n" +
                     "from USER\n" +
                     "where USER.userID=?\n" +
@@ -164,22 +163,23 @@ public class Main {
 
         }
 
-
-
-
-
     }
 
     void showCupboard(){
 
         try{
             server.connect();
-            server.stmt = server.conn.createStatement();
-            server.rs = server.stmt.executeQuery("select STORES.ingredientID\n" +
+            server.ps = server.conn.prepareStatement("select STORES.ingredientID\n" +
                     "from USER, STORES\n" +
-                    "where USER.userID=\"38CA10BA\"\n" +
-                    "AND USER.cupboardID = \"CB1FD927\"\n" +
+                    "where USER.userID=?" +
+                    "AND USER.cupboardID = ?" +
                     "AND STORES.cupboardID = USER.cupboardID;");
+
+            server.ps.setString(1,user.userName);
+            server.ps.setString(2,user.cupboardId);
+
+            server.rs = server.ps.executeQuery();
+
 
             String __Ingredient = "ingredientID";
             String _Ingredient = String.format("%-10s", __Ingredient);
