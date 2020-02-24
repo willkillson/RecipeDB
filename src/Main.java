@@ -18,14 +18,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        new Main().run();
+        new Main(args).run();
 
     }
 
     /**
      * Constructor
      */
-    public Main(){
+    public Main(String[] args){
         this.scanner = new Scanner(System.in);
         this.user = null;
 
@@ -35,7 +35,16 @@ public class Main {
         selector.put("show_cupboard", menu_encoder.show_cupboard);
         selector.put("show_recipe_information", menu_encoder.show_recipe_information);
 
-        this.server = new ServerDB("192.168.1.3","com.mysql.jdbc.Driver","RECIPEDB","kevin","6016");
+        for(int i = 0;i< args.length;i++){
+            System.out.println("args["+i+"]: "+args[i]);
+        }
+
+        if(args.length<4){
+            System.out.println("Error: not enough arguments");
+            System.exit(0);
+        }
+
+        this.server = new ServerDB(args[0],args[1],args[2],args[3],args[4]);
 
 
     }
@@ -128,25 +137,23 @@ public class Main {
             server.ps.setString(2,pwd);
 
             server.rs = server.ps.executeQuery();
-            server.rs.next();
+
+            /*
+                Testing whether a result set is empty.
+            https://javarevisited.blogspot.com/2016/10/how-to-check-if-resultset-is-empty-in-Java-JDBC.html
+             */
+
+            if(server.rs.next()==false){
+                System.out.println("Error: invalid username/password");
+                return;
+            }
             String userId = server.rs.getString("userID");
             String cupboardID = server.rs.getString("cupboardID");
             String cartID = server.rs.getString("cartID");
 
-            if(userId==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-            if(cupboardID==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-            if(cartID==null){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-
             this.user = new User(userId,cupboardID,cartID);
+
+            System.out.println("\nLoged in as: "+this.user.userName+'\n');
 
 
         }
