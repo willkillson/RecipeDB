@@ -1,253 +1,154 @@
+import db.Queries;
+import db.ServerDB;
+import entities.Cupboard;
+import entities.Ingredient;
+import entities.User;
+
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import util.Result;
 
 public class Main {
 
     //vars
     private Scanner scanner;
-    private User user;
     private ServerDB server;
 
-    enum menu_encoder{
-        show_cupboard,
-        show_recipe_information
-    }
-    HashMap<String, menu_encoder> selector;
-
-
     public static void main(String[] args) {
-
         new Main(args).run();
-
     }
 
     /**
      * Constructor
      */
-    public Main(String[] args){
+    public Main(String[] args) {
         this.scanner = new Scanner(System.in);
-        this.user = null;
 
-        //build menu encoder
-        this.selector = new HashMap<>();
-
-        selector.put("show_cupboard", menu_encoder.show_cupboard);
-        selector.put("show_recipe_information", menu_encoder.show_recipe_information);
-
-        for(int i = 0;i< args.length;i++){
-            System.out.println("args["+i+"]: "+args[i]);
-        }
-
-        if(args.length<4){
-            System.out.println("Error: not enough arguments");
+        if(args.length < 5){
+            System.out.println(
+                "Error: Main <ip> <database name> <database driver> <username> <password>");
             System.exit(0);
         }
 
-        this.server = new ServerDB(args[0],args[1],args[2],args[3],args[4]);
+        Result<ServerDB.Config> maybeConfig = ServerDB.Config.create()
+            .setIp(args[0])
+            .setDatabaseName(args[1])
+            .setDriver(args[2])
+            .setUsername(args[3])
+            .setPassword(args[4])
+            .build();
 
+        if (maybeConfig.isFailure()) {
+            System.out.println(maybeConfig.error());
+            System.exit(0);
+        }
 
+        try {
+            this.server = ServerDB.create(maybeConfig.value());
+            Queries.checkConnection(server);
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database");
+            e.printStackTrace();
+            System.exit(-1);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Invalid database driver");
+            System.exit(-1);
+        }
     }
 
-    public void run(){
+    public static HashMap<Integer, String> menuOptions;
+    static {
+        menuOptions = new HashMap<>();
+        menuOptions.put(0, "Logout");
+        menuOptions.put(1, "Show entities.Cupboard");
+        menuOptions.put(2, "Show Recipe Information");
+    }
+
+    public void run() {
+        while (true) {
+            User user = getUser();
+            System.out.println("Welcome " + user.getEmail());
+            int choice = -1;
+            do {
+                choice = displayMenu();
+                if (choice != 0) {
+                    switch (choice) {
+                        case (1) :
+                            showCupboard(user);
+                            break;
+                        default:
+                            System.out.println("ERROR: That selection has not been implemented.");
+                    }
+                }
+            } while(choice != 0);
+        }
+    }
 
 
+    /**
+     * TODO: NEED TO COMPLETE THIS MENU
+     */
+    public int displayMenu() {
+        int choice;
+        do {
+            System.out.println("***Menu Items***");
+            for(Map.Entry<Integer, String> entry : menuOptions.entrySet()) {
+                System.out.println(entry.getKey() + ") " + entry.getValue());
+            }
+            choice = scanner.nextInt();
 
+            if (!menuOptions.containsKey(choice)) {
+                System.out.println("ERROR: Please select a valid option!");
+            }
+        } while (!menuOptions.containsKey(choice));
+        return choice;
+    }
 
+    public User getUser() {
+        User user = null;
+        do {
+            // Get credentials
 
-        while(true){
-
-/*            System.out.print("UserName:");
+            /*   // add/remove slash to /* to toggle comment block
+            System.out.print("UserName:");
             String name = scanner.nextLine();
             System.out.print("Password:");
-            String password = scanner.nextLine();*/
+            String password = scanner.nextLine();
+            /*/
             String name = "38CA10BA";//todo remove this for auth
             String password = "03D64A6A";//automatic login
-            verifyUser(name,password);
+            //*/
 
-            if(this.user!=null){
-                break;
+            // Auth user
+            Result<User> maybeUser = Queries.verifyUser(server, name, password);
+
+            if (maybeUser.isFailure()) {
+                System.out.println(maybeUser.error());
+            } else {
+                user = maybeUser.value();
             }
-        }
-
-        while(true){
-            displayMenu();
-            String out = scanner.nextLine();
-            System.out.println();
-            performAction(out);
-        }
-
-
+        } while (user == null); // exists on existing user
+        return user;
     }
 
-    public void displayMenu(){
-        //todo
-        System.out.println("***Menu Items***");
-        System.out.println("show_cupboard");
-        System.out.println("show_recipe_information");
-    }
-
-    public void performAction(String a){
-        menu_encoder s = this.selector.get(a);
-
-        if(s==null){
-            System.out.println("Error: Invalid menu selection.");
-            return;
-        }
-        switch(s){
-            case show_cupboard:
-            {
-                this.showCupboard();
-                break;
+    void showCupboard(User user) {
+        Result<Cupboard> maybeCupboard = Queries.getCupboard(server, user);
+        if (maybeCupboard.isSuccess()) {
+            Cupboard cupboard = maybeCupboard.value();
+            if (cupboard.size() == 0) {
+                System.out.println("entities.Cupboard is empty");
+            } else {
+                System.out.println("Ingredients");
+                System.out.println("--------------");
+                for (Ingredient ingredient : cupboard.getIngredients()) {
+                    System.out.println(ingredient.getName());
+                }
             }
-            case show_recipe_information:
-            {
-                //todo
-                System.out.println("TODO: show_recipe_information");
-                break;
-            }
-        }
-
-    }
-
-    /** Initializes the user object
-     *
-     * @param n
-     * @param pwd
-     * @return
-     */
-    void verifyUser(String n, String pwd){
-        /*
-                        Sql
-
-            Find the user with name.
-            Check if the password is pwd.
-
-            Initialize this.user object if
-            verification is achieved.
-
-         */
-        try{
-            server.connect();
-            server.ps = server.conn.prepareStatement("select userID, cupboardID, cartID\n" +
-                    "from USER\n" +
-                    "where USER.userID=?\n" +
-                    "AND USER.password = ?;");
-            server.ps.setString(1,n);
-            server.ps.setString(2,pwd);
-
-            server.rs = server.ps.executeQuery();
-
-            /*
-                Testing whether a result set is empty.
-            https://javarevisited.blogspot.com/2016/10/how-to-check-if-resultset-is-empty-in-Java-JDBC.html
-             */
-
-            if(server.rs.next()==false){
-                System.out.println("Error: invalid username/password");
-                return;
-            }
-            String userId = server.rs.getString("userID");
-            String cupboardID = server.rs.getString("cupboardID");
-            String cartID = server.rs.getString("cartID");
-
-            this.user = new User(userId,cupboardID,cartID);
-
-            System.out.println("\nLoged in as: "+this.user.userName+'\n');
-
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        finally {
-            try{
-                this.server.close();
-            }
-            catch (SQLException se) {
-                se.printStackTrace();
-            }
-
-        }
-
-    }
-
-    void showCupboard(){
-
-        try{
-            server.connect();
-            server.ps = server.conn.prepareStatement("select STORES.ingredientID\n" +
-                    "from USER, STORES\n" +
-                    "where USER.userID=?" +
-                    "AND USER.cupboardID = ?" +
-                    "AND STORES.cupboardID = USER.cupboardID;");
-
-            server.ps.setString(1,user.userName);
-            server.ps.setString(2,user.cupboardId);
-
-            server.rs = server.ps.executeQuery();
-
-
-            String __Ingredient = "ingredientID";
-            String _Ingredient = String.format("%-10s", __Ingredient);
-
-            System.out.println(_Ingredient);
-
-            while (server.rs.next()) {
-                _Ingredient = String.format("%-10s", server.rs.getString("ingredientID"));
-                System.out.println(_Ingredient);
-            }
-
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        finally {
-            try{
-                this.server.close();
-            }
-            catch (SQLException se) {
-                se.printStackTrace();
-            }
-
+        } else {
+            System.out.println(maybeCupboard.error());
         }
     }
-
-    void listRecipes(){
-
-        /*
-
-            select *
-            from recipes;
-
-         */
-
-    }
-
-    void displayLocalIngredients(){
-
-    }
-
-    void addRecipes(){
-
-        
-
-    }
-
-    void removeRecipe(){}
-
-    void getShoppingList(){
-
-    }
-
-    void getAvailableRecipes(){
-
-         //TODO
-
-    }
-
-
-
-
 }
