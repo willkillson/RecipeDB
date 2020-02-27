@@ -1,4 +1,6 @@
-# file: ~/.gitignore_globaltime
+# file: ~/.gitignore
 .DS_Store
-.idea
-.out
+.idea/
+.out/
+out/
+*.iml
