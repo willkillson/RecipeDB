@@ -2,8 +2,8 @@
 
 Command line arguments are,
 
-<ipaddress> <drivername> <dbname> <dbadminName> <dbadminPassword>
+<ipaddress> <dbname> <drivername> <dbadminName> <dbadminPassword>
 
-Example,
+Example
 
-"192.168.1.3" "com.mysql.jdbc.Driver" "RECIPEDB" "kevin" "6016"
+"69.254.195.147:3306" "RECIPEDB" "com.mysql.jdbc.Driver" "kevin" "6016"
