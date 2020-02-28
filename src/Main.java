@@ -1,15 +1,15 @@
 import db.Queries;
 import db.ServerDB;
-import entities.Cupboard;
-import entities.Ingredient;
 import entities.User;
-
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Scanner;
+import screens.Login;
+import screens.ManageCupboard;
+import screens.ManageRecipe;
 import util.Result;
+import util.SelectAction;
+import util.SimpleSelect;
 
 public class Main {
 
@@ -27,7 +27,7 @@ public class Main {
     public Main(String[] args) {
         this.scanner = new Scanner(System.in);
 
-        if(args.length < 5){
+        if (args.length < 5) {
             System.out.println(
                 "Error: Main <ip> <database name> <database driver> <username> <password>");
             System.exit(0);
@@ -59,96 +59,40 @@ public class Main {
         }
     }
 
-    public static HashMap<Integer, String> menuOptions;
+    public static ArrayList<String> menuOptions;
+
     static {
-        menuOptions = new HashMap<>();
-        menuOptions.put(0, "Logout");
-        menuOptions.put(1, "Show entities.Cupboard");
-        menuOptions.put(2, "Show Recipe Information");
+        menuOptions = new ArrayList<>();
+        menuOptions.add("Logout");
+        menuOptions.add("Manage Cupboard");
+        menuOptions.add("Manage Recipes");
     }
 
     public void run() {
         while (true) {
-            User user = getUser();
+            User user = Login.getUser(server);
             System.out.println("Welcome " + user.getEmail());
-            int choice = -1;
+
+            SelectAction<String> selected = null;
             do {
-                choice = displayMenu();
-                if (choice != 0) {
-                    switch (choice) {
-                        case (1) :
-                            showCupboard(user);
+                // the zero is the index of the exit in menuOptions
+                selected = SimpleSelect.show(scanner, menuOptions, 0);
+                if (selected.isSelected()) { // valid selection / not back
+                    // get selected index
+                    String selectionText = selected.getSelected();
+                    int index = menuOptions.indexOf(selectionText);
+                    switch (index) {
+                        case (1):
+                            ManageCupboard.view(scanner, server, user);
+                            break;
+                        case (2):
+                            ManageRecipe.view(scanner, server, user);
                             break;
                         default:
                             System.out.println("ERROR: That selection has not been implemented.");
                     }
                 }
-            } while(choice != 0);
-        }
-    }
-
-
-    /**
-     * TODO: NEED TO COMPLETE THIS MENU
-     */
-    public int displayMenu() {
-        int choice;
-        do {
-            System.out.println("***Menu Items***");
-            for(Map.Entry<Integer, String> entry : menuOptions.entrySet()) {
-                System.out.println(entry.getKey() + ") " + entry.getValue());
-            }
-            choice = scanner.nextInt();
-
-            if (!menuOptions.containsKey(choice)) {
-                System.out.println("ERROR: Please select a valid option!");
-            }
-        } while (!menuOptions.containsKey(choice));
-        return choice;
-    }
-
-    public User getUser() {
-        User user = null;
-        do {
-            // Get credentials
-
-            /*   // add/remove slash to /* to toggle comment block
-            System.out.print("UserName:");
-            String name = scanner.nextLine();
-            System.out.print("Password:");
-            String password = scanner.nextLine();
-            /*/
-            String name = "38CA10BA";//todo remove this for auth
-            String password = "03D64A6A";//automatic login
-            //*/
-
-            // Auth user
-            Result<User> maybeUser = Queries.verifyUser(server, name, password);
-
-            if (maybeUser.isFailure()) {
-                System.out.println(maybeUser.error());
-            } else {
-                user = maybeUser.value();
-            }
-        } while (user == null); // exists on existing user
-        return user;
-    }
-
-    void showCupboard(User user) {
-        Result<Cupboard> maybeCupboard = Queries.getCupboard(server, user);
-        if (maybeCupboard.isSuccess()) {
-            Cupboard cupboard = maybeCupboard.value();
-            if (cupboard.size() == 0) {
-                System.out.println("entities.Cupboard is empty");
-            } else {
-                System.out.println("Ingredients");
-                System.out.println("--------------");
-                for (Ingredient ingredient : cupboard.getIngredients()) {
-                    System.out.println(ingredient.getName());
-                }
-            }
-        } else {
-            System.out.println(maybeCupboard.error());
+            } while (!selected.isBack()); // exit on back
         }
     }
 }

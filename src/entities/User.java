@@ -6,7 +6,7 @@ public class User {
     private String cupboardId;
     private String cartID;
 
-    public User(String userId, String email, String cupboardId, String cartID){
+    public User(String userId, String email, String cupboardId, String cartID) {
         this.userId = userId;
         this.email = email;
         this.cupboardId = cupboardId;
@@ -28,4 +28,6 @@ public class User {
     public String getUserId() {
         return userId;
     }
+
+
 }

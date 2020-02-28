@@ -1,8 +1,8 @@
 package db;
 
-import com.sun.security.ntlm.Server;
 import entities.Cupboard;
 import entities.Ingredient;
+import entities.Recipe;
 import entities.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +29,8 @@ public class Queries {
         return true;
     }
 
-    /** Retrieve user from database and verify password
+    /**
+     * Retrieve user from database and verify password
      *
      * @param username username
      * @param password password
@@ -37,12 +38,12 @@ public class Queries {
      */
     public static Result<User> verifyUser(ServerDB server,
                                           String username,
-                                          String password){
+                                          String password) {
 
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        try{
+        try {
             stat = conn.prepareStatement(
                 "SELECT userID, cupboardID, cartID\n" +
                     "FROM USER\n" +
@@ -53,20 +54,18 @@ public class Queries {
 
             result = stat.executeQuery();
 
-            if(!result.next()){
-                return Result.Failure("Error: invalid username/password");
+            if (!result.next()) {
+                return Result.failure("Error: invalid username/password");
             }
             String userId = result.getString("userID");
             String email = result.getString("cupboardID");
             String cupboardID = result.getString("cupboardID");
             String cartID = result.getString("cartID");
 
-            return Result.Success(new User(userId, email, cupboardID,cartID));
-        }
-        catch(SQLException e){
+            return Result.success(new User(userId, email, cupboardID, cartID));
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (result != null) {
                     result.close();
@@ -74,20 +73,19 @@ public class Queries {
                 if (stat != null) {
                     stat.close();
                 }
-            }
-            catch (SQLException se) {
+            } catch (SQLException se) {
                 se.printStackTrace();
             }
         }
-        return Result.Failure("There was an error processing your request. " +
+        return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
 
-    public static Result<Cupboard> getCupboard(ServerDB server, User user){
+    public static Result<Cupboard> getCupboard(ServerDB server, User user) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        try{
+        try {
             stat = conn.prepareStatement(
                 "SELECT STORES.ingredientID as ingredientID, INGREDIENT.name as name\n" +
                     "FROM USER, STORES, INGREDIENT\n" +
@@ -102,17 +100,15 @@ public class Queries {
             result = stat.executeQuery();
 
             ArrayList<Ingredient> ingredients = new ArrayList<>();
-            while (result.next()){
+            while (result.next()) {
                 String ingredientID = result.getString("ingredientID");
                 String name = result.getString("name");
                 ingredients.add(new Ingredient(ingredientID, name));
             }
-            return Result.Success(new Cupboard(user.getCupboardId(), ingredients));
-        }
-        catch(SQLException e){
+            return Result.success(new Cupboard(user.getCupboardId(), ingredients));
+        } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 if (result != null) {
                     result.close();
@@ -120,15 +116,17 @@ public class Queries {
                 if (stat != null) {
                     stat.close();
                 }
-            }
-            catch (SQLException se) {
+            } catch (SQLException se) {
                 se.printStackTrace();
             }
         }
-        return Result.Failure("There was an error processing your request. " +
+        return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
 
+    public static Result<ArrayList<Recipe>> getRecipes(ServerDB server, int start, int stop) {
+        return Result.failure("Not Implemented");
+    }
 
 //
 //
