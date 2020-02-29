@@ -43,13 +43,13 @@ public class ManageRecipe {
     }
 
     public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
-        final int increment = 10;
+        final int increment = 2;
         int start = 0;
         SelectAction<Recipe> action;
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, start, start + increment);
+                RecipeQueries.getRecipes(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
