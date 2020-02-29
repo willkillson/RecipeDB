@@ -69,7 +69,7 @@ public class Main {
         menuOptions.add("Logout");
         menuOptions.add("Manage Cupboard");
         menuOptions.add("Manage Cart");
-        menuOptions.add("Manage Recipes");
+        menuOptions.add("Manage recipes");
     }
 
     public void run() {
