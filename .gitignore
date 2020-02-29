@@ -4,3 +4,6 @@
 .out/
 out/
 *.iml
+.classpath
+.project
+/bin/

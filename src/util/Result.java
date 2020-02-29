@@ -1,6 +1,6 @@
 package util;
 
-public class Result <T> {
+public class Result<T> {
     private T value;
     private String error;
     private boolean success;
@@ -22,15 +22,16 @@ public class Result <T> {
     public T value() {
         return value;
     }
+
     public String error() {
         return error;
     }
 
-    public static Result Success(Object value) {
-        return new Result(true, value, null);
+    public static <T> Result<T> success(T value) {
+        return new Result<T>(true, value, null);
     }
 
-    public static Result Failure(String error) {
-        return new Result(false, null, error);
+    public static <T> Result<T> failure(String error) {
+        return new Result<T>(false, null, error);
     }
 }

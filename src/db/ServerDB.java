@@ -1,6 +1,8 @@
 package db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import util.Result;
 
@@ -29,7 +31,7 @@ public class ServerDB {
         }
     }
 
-    private ServerDB(Config config){
+    private ServerDB(Config config) {
         this.config = config;
     }
 
@@ -53,12 +55,13 @@ public class ServerDB {
 
         /**
          * Configuration class for the database connection
-         *         "jdbc:mysql://192.168.1.2/jdbclab?autoReconnect=true&useSSL=false"
-         *         kevin
-         *         6016
-         * @param ip ip address of mysql database
-         * @param driver sql driver
-         * @param dbName database name
+         * "jdbc:mysql://192.168.1.2/jdbclab?autoReconnect=true&useSSL=false"
+         * kevin
+         * 6016
+         *
+         * @param ip        ip address of mysql database
+         * @param driver    sql driver
+         * @param dbName    database name
          * @param adminName database username
          * @param adminPass database password
          */
@@ -87,8 +90,12 @@ public class ServerDB {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == null) return false;
-            if (!(obj instanceof Config)) return false;
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof Config)) {
+                return false;
+            }
             Config other = (Config) obj;
             return ip.equals(other.ip)
                 && driver.equals(other.driver)
@@ -103,23 +110,28 @@ public class ServerDB {
 
         public static class Builder {
             private Config config =
-                new Config("","","","","");
+                new Config("", "", "", "", "");
+
             public Builder setIp(String ip) {
                 config.ip = ip;
                 return this;
             }
+
             public Builder setDatabaseName(String databaseName) {
                 config.dbName = databaseName;
                 return this;
             }
+
             public Builder setDriver(String driver) {
                 config.driver = driver;
                 return this;
             }
+
             public Builder setUsername(String username) {
                 config.adminName = username;
                 return this;
             }
+
             public Builder setPassword(String password) {
                 config.adminPass = password;
                 return this;
@@ -127,15 +139,15 @@ public class ServerDB {
 
             public Result<Config> build() {
                 if (config.ip.equals("")) {
-                    return Result.Failure("Ip is required");
+                    return Result.failure("\nERROR: Ip is required");
                 } else if (config.dbName.equals("")) {
-                    return Result.Failure("Database name is required");
+                    return Result.failure("\nERROR: Database name is required");
                 } else if (config.driver.equals("")) {
-                    return Result.Failure("Database driver is required");
+                    return Result.failure("\nERROR: Database driver is required");
                 } else if (config.adminName.equals("")) {
-                    return Result.Failure("Username is required");
+                    return Result.failure("\nERROR: Username is required");
                 } else {
-                    return Result.Success(config);
+                    return Result.success(config);
                 }
             }
         }
