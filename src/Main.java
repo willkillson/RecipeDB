@@ -29,7 +29,9 @@ public class Main {
 
         if (args.length < 5) {
             System.out.println(
-                "Error: Main <ip> <database name> <database driver> <username> <password>");
+                "\nERROR: Insufficient number of arguments provided.\n"
+                + "Please use the following for reference:\n"
+                + "Main <ip> <database name> <database driver> <username> <password>");
             System.exit(0);
         }
 
@@ -50,11 +52,11 @@ public class Main {
             this.server = ServerDB.create(maybeConfig.value());
             Queries.checkConnection(server);
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database");
-            e.printStackTrace();
+            System.out.println("\nERROR: Connection failed.\n"
+            		+ "Please check the url, username, and password.");
             System.exit(-1);
         } catch (ClassNotFoundException e) {
-            System.out.println("Invalid database driver");
+            System.out.println("\nERROR: Invalid database driver.");
             System.exit(-1);
         }
     }

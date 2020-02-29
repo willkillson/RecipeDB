@@ -139,13 +139,13 @@ public class ServerDB {
 
             public Result<Config> build() {
                 if (config.ip.equals("")) {
-                    return Result.failure("Ip is required");
+                    return Result.failure("\nERROR: Ip is required");
                 } else if (config.dbName.equals("")) {
-                    return Result.failure("Database name is required");
+                    return Result.failure("\nERROR: Database name is required");
                 } else if (config.driver.equals("")) {
-                    return Result.failure("Database driver is required");
+                    return Result.failure("\nERROR: Database driver is required");
                 } else if (config.adminName.equals("")) {
-                    return Result.failure("Username is required");
+                    return Result.failure("\nERROR: Username is required");
                 } else {
                     return Result.success(config);
                 }
