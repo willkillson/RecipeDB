@@ -24,6 +24,8 @@ public class ManageCupboard {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cupboard");
+        menuOptions.add("Add Ingredient");
+        menuOptions.add("Delete Ingredient");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -40,6 +42,8 @@ public class ManageCupboard {
                     case (1):
                         showCupboard(server, user);
                         break;
+                    case(2):
+
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }

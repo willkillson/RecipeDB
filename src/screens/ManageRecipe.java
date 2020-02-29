@@ -19,6 +19,9 @@ public class ManageRecipe {
         menuOptions.add("Logout");
         menuOptions.add("Show All Recipes");
         menuOptions.add("Show Stored Recipes(WIP)");
+        menuOptions.add("Rate Recipe");
+        menuOptions.add("Add Recipe To Cart");
+        menuOptions.add("Delete Recipe");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -35,6 +38,8 @@ public class ManageRecipe {
                     case (1):
                         showAllRecipes(scanner, server, user);
                         break;
+                    case (3):
+                        rateRecipe(scanner, server, user);
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -88,4 +93,55 @@ public class ManageRecipe {
         System.out.println("\tUrl: " + recipe.getUrl());
         System.out.println("\tRating: " + recipe.getRating().get());
     }
+
+    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                    RecipeQueries.getRecipes(server, 0, 100);
+
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                int i =0;
+                for (Recipe recipe : recipes) {
+                    System.out.println(i);
+                    i++;
+                    showRecipe(recipe);
+                }
+                Scanner in = new Scanner(System.in);
+                System.out.println("Which recipe would you like to update the rating for?: ");
+                int recipe = in.nextInt();
+                System.out.println("What would you like to update the rating to?: ");
+                int rating = in.nextInt();
+                Recipe update = recipes.get(recipe);
+                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
+                return;
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack());
+    }
+
+    /**public static void addRecipe(Scanner scanner, ServerDB server, User user) {
+        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                    RecipeQueries.getRecipes(server, 0, 100);
+
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                Scanner in = new Scanner(System.in);
+                System.out.println("Which a new recipeID for the recipe: ");
+                String ID = in.nextLine();
+                RecipeQueries.addRecipe(server, ID, recipes);
+                return;
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack());
+    }**/
 }

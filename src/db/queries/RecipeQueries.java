@@ -61,6 +61,10 @@ public class RecipeQueries {
             "Please contact software developer with the previous output");
     }
 
+
+
+
+
     public static void addRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
@@ -85,17 +89,11 @@ public class RecipeQueries {
             stat.setString(2, name);
             stat.setString(3, URL);
             stat.executeUpdate();
-            System.out.println("Enter the last cooked date for the recipe ; dd-MMM-yyyy" );
-            String lastCooked = in.next();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-            Date date2=null;
-            try {
-                //Parsing the String
-                date2 = dateFormat.parse(lastCooked);
-            } catch (ParseException e) {
-                System.out.println("Incorrect Date Format");
-                e.printStackTrace();
-            }
+            System.out.println("Enter the last cooked date for the recipe ; dd/mm/yyyy" );
+            String date = in.nextLine();
+            java.util.Date myDate = new java.util.Date(date);
+            java.sql.Date lastCooked = new java.sql.Date(myDate.getTime());
+
             System.out.println("Enter the number of times this recipe was cooked" );
             int timesCooked = in.nextInt();
             System.out.println("Enter a rating for the recipe" );
@@ -103,7 +101,7 @@ public class RecipeQueries {
             stat = conn.prepareStatement(
                     "INSERT INTO ADDS VALUES(null, ?, ?, ?, ?)");
             stat.setString(1, recipeID);
-            stat.setDate(2, (java.sql.Date) date2);
+            stat.setDate(2, lastCooked);
             stat.setInt(3, timesCooked);
             stat.setInt(4, rating);
             stat.executeUpdate();
@@ -127,7 +125,9 @@ public class RecipeQueries {
         return;
     }
 
-    public static ArrayList<entities.Recipe> deleteRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
+
+    //if we want to be able to delete a recipe, do not implement.
+    /**public static ArrayList<entities.Recipe> deleteRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
         Recipe delete=null;
         for (Recipe recipe : recipes) {
             if (ID == recipe.getRecipeId()) {
@@ -166,7 +166,7 @@ public class RecipeQueries {
         }
         System.out.println("There was an error processing your request.");
         return recipes;
-    }
+    }**/
 
     //method to update the rating of a recipe
     public static void updateRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes, int rating) {
