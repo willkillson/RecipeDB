@@ -6,10 +6,10 @@ import entities.Recipe;
 import entities.User;
 import java.util.ArrayList;
 import java.util.Scanner;
-import util.PaginatedSelect;
 import util.Result;
-import util.SelectAction;
-import util.SimpleSelect;
+import util.ui.PaginatedSelect;
+import util.ui.SelectAction;
+import util.ui.SimpleSelect;
 
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;
@@ -45,7 +45,7 @@ public class ManageRecipe {
     public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
         final int increment = 10;
         int start = 0;
-        SelectAction<Recipe> action = null;
+        SelectAction<Recipe> action;
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =

@@ -9,8 +9,8 @@ import screens.ManageCart;
 import screens.ManageCupboard;
 import screens.ManageRecipe;
 import util.Result;
-import util.SelectAction;
-import util.SimpleSelect;
+import util.ui.SelectAction;
+import util.ui.SimpleSelect;
 
 public class Main {
 
@@ -31,8 +31,8 @@ public class Main {
         if (args.length < 5) {
             System.out.println(
                 "\nERROR: Insufficient number of arguments provided.\n"
-                + "Please use the following for reference:\n"
-                + "Main <ip> <database name> <database driver> <username> <password>");
+                    + "Please use the following for reference:\n"
+                    + "Main <ip> <database name> <database driver> <username> <password>");
             System.exit(0);
         }
 
@@ -54,7 +54,7 @@ public class Main {
             Queries.checkConnection(server);
         } catch (SQLException e) {
             System.out.println("\nERROR: Connection failed.\n"
-            		+ "Please check the url, username, and password.");
+                + "Please check the url, username, and password.");
             System.exit(-1);
         } catch (ClassNotFoundException e) {
             System.out.println("\nERROR: Invalid database driver.");
@@ -91,7 +91,7 @@ public class Main {
                             break;
                         case (2):
                             ManageCart.view(scanner, server, user);
-                            break;   
+                            break;
                         case (3):
                             ManageRecipe.view(scanner, server, user);
                             break;

@@ -1,6 +1,4 @@
-package util;
-
-import java.util.Optional;
+package util.ui;
 
 public class SelectAction<T> {
     public enum Action {
@@ -54,5 +52,7 @@ public class SelectAction<T> {
         return new SelectAction<>(Action.Next);
     }
 
-    public static <T> SelectAction<T> Selected(T value) { return new SelectAction<>(value); }
+    public static <T> SelectAction<T> Selected(T value) {
+        return new SelectAction<>(value);
+    }
 }

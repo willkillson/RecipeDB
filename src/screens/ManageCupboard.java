@@ -5,12 +5,11 @@ import db.ServerDB;
 import entities.Cupboard;
 import entities.User;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import util.Helpers;
 import util.Result;
-import util.SelectAction;
-import util.SimpleSelect;
+import util.ui.SelectAction;
+import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with the cupboard.

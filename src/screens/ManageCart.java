@@ -1,30 +1,29 @@
 package screens;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import db.Queries;
 import db.ServerDB;
 import entities.Cart;
 import entities.User;
+import java.util.ArrayList;
+import java.util.Scanner;
 import util.Helpers;
 import util.Result;
-import util.SelectAction;
-import util.SimpleSelect;
+import util.ui.SelectAction;
+import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with the cart.
  */
 public class ManageCart {
 
-	public static ArrayList<String> menuOptions;
+    public static ArrayList<String> menuOptions;
 
     static {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cart");
     }
-	
+
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -59,5 +58,5 @@ public class ManageCart {
             System.out.println(maybeCart.error());
         }
     }
-    
+
 }

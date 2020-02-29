@@ -1,7 +1,8 @@
-package util;
+package util.ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import util.Result;
 
 public class Select<T> {
     public static <T> SelectAction<T> show(Scanner scanner, ArrayList<T> choices,

@@ -32,6 +32,7 @@ public class Queries {
 
     /**
      * Retrieve user from database and verify password
+     *
      * @return user if successful, error if not
      */
     public static Result<User> verifyUser(ServerDB server,
@@ -81,6 +82,7 @@ public class Queries {
 
     /**
      * Retrieves cupboard of the user from the database.
+     *
      * @return cupboard if successful, error if not
      */
     public static Result<Cupboard> getCupboard(ServerDB server, User user) {
@@ -128,6 +130,7 @@ public class Queries {
 
     /**
      * Retrieves cart of the user from the database.
+     *
      * @return cart if successful, error if not
      */
     public static Result<Cart> getCart(ServerDB server, User user) {
@@ -172,7 +175,7 @@ public class Queries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
-    
+
     public static Result<ArrayList<Recipe>> getRecipes(ServerDB server, int start, int stop) {
         return Result.failure("Not Implemented");
     }
