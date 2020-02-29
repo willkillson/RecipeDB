@@ -1,7 +1,7 @@
 package screens;
 
-import db.Queries;
 import db.ServerDB;
+import db.queries.RecipeQueries;
 import entities.Recipe;
 import entities.User;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class ManageRecipe {
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                Queries.getRecipes(server, start, start + increment);
+                RecipeQueries.getRecipes(server, start, start + increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();

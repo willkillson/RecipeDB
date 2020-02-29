@@ -1,6 +1,8 @@
 package screens;
 
-import db.Queries;
+import static db.queries.CartQueries.getCart;
+
+
 import db.ServerDB;
 import entities.Cart;
 import entities.User;
@@ -46,7 +48,7 @@ public class ManageCart {
     }
 
     public static void showCart(ServerDB server, User user) {
-        Result<Cart> maybeCart = Queries.getCart(server, user);
+        Result<Cart> maybeCart = getCart(server, user);
         if (maybeCart.isSuccess()) {
             Cart cart = maybeCart.value();
             if (cart.size() == 0) {

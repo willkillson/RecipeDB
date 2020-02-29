@@ -1,5 +1,5 @@
-import db.Queries;
 import db.ServerDB;
+import db.queries.Queries;
 import entities.User;
 import java.sql.SQLException;
 import java.util.ArrayList;

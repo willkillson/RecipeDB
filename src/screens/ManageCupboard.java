@@ -1,6 +1,8 @@
 package screens;
 
-import db.Queries;
+import static db.queries.CupboardQueries.getCupboard;
+
+
 import db.ServerDB;
 import entities.Cupboard;
 import entities.User;
@@ -46,7 +48,7 @@ public class ManageCupboard {
     }
 
     public static void showCupboard(ServerDB server, User user) {
-        Result<Cupboard> maybeCupboard = Queries.getCupboard(server, user);
+        Result<Cupboard> maybeCupboard = getCupboard(server, user);
         if (maybeCupboard.isSuccess()) {
             Cupboard cupboard = maybeCupboard.value();
             if (cupboard.size() == 0) {

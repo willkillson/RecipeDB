@@ -1,6 +1,8 @@
 package screens;
 
-import db.Queries;
+import static db.queries.UserQueries.verifyUser;
+
+
 import db.ServerDB;
 import entities.User;
 import util.Result;
@@ -23,7 +25,7 @@ public class Login {
             //*/
 
             // Auth user
-            Result<User> maybeUser = Queries.verifyUser(server, name, password);
+            Result<User> maybeUser = verifyUser(server, name, password);
 
             if (maybeUser.isFailure()) {
                 System.out.println(maybeUser.error());
