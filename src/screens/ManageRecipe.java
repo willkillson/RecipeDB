@@ -43,7 +43,7 @@ public class ManageRecipe {
     }
 
     public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
-        final int increment = 2;
+        final int increment = 5;
         int start = 0;
         SelectAction<Recipe> action;
         do {
