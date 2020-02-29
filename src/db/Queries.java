@@ -1,5 +1,6 @@
 package db;
 
+import entities.Cart;
 import entities.Cupboard;
 import entities.Ingredient;
 import entities.Recipe;
@@ -31,9 +32,6 @@ public class Queries {
 
     /**
      * Retrieve user from database and verify password
-     *
-     * @param username username
-     * @param password password
      * @return user if successful, error if not
      */
     public static Result<User> verifyUser(ServerDB server,
@@ -81,6 +79,10 @@ public class Queries {
             "Please contact software developer with the previous output");
     }
 
+    /**
+     * Retrieves cupboard of the user from the database.
+     * @return cupboard if successful, error if not
+     */
     public static Result<Cupboard> getCupboard(ServerDB server, User user) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
@@ -124,6 +126,53 @@ public class Queries {
             "Please contact software developer with the previous output");
     }
 
+    /**
+     * Retrieves cart of the user from the database.
+     * @return cart if successful, error if not
+     */
+    public static Result<Cart> getCart(ServerDB server, User user) {
+        Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+            stat = conn.prepareStatement(
+                "SELECT CONTAINS.ingredientID as ingredientID, INGREDIENT.name as name\n" +
+                    "FROM USER, STORES, INGREDIENT\n" +
+                    "WHERE USER.userID = ?" +
+                    "AND USER.cartID = ?" +
+                    "AND CONTAINS.cartID = USER.cartID " +
+                    "AND CONTAINS.ingredientID = INGREDIENT.ingredientID;");
+
+            stat.setString(1, user.getUserId());
+            stat.setString(2, user.getCartId());
+
+            result = stat.executeQuery();
+
+            ArrayList<Ingredient> ingredients = new ArrayList<>();
+            while (result.next()) {
+                String ingredientID = result.getString("ingredientID");
+                String name = result.getString("name");
+                ingredients.add(new Ingredient(ingredientID, name));
+            }
+            return Result.success(new Cart(user.getCartId(), ingredients));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return Result.failure("There was an error processing your request. " +
+            "Please contact software developer with the previous output");
+    }
+    
     public static Result<ArrayList<Recipe>> getRecipes(ServerDB server, int start, int stop) {
         return Result.failure("Not Implemented");
     }

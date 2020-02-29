@@ -13,7 +13,7 @@ public class User {
         this.cartID = cartID;
     }
 
-    public String getCartID() {
+    public String getCartId() {
         return cartID;
     }
 

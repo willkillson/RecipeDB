@@ -1,30 +1,30 @@
 package screens;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import db.Queries;
 import db.ServerDB;
-import entities.Cupboard;
+import entities.Cart;
 import entities.User;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
 import util.Helpers;
 import util.Result;
 import util.SelectAction;
 import util.SimpleSelect;
 
 /**
- * Displays to the user and completes the actions associated with the cupboard.
+ * Displays to the user and completes the actions associated with the cart.
  */
-public class ManageCupboard {
+public class ManageCart {
 
-    public static ArrayList<String> menuOptions;
+	public static ArrayList<String> menuOptions;
 
     static {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
-        menuOptions.add("Show Cupboard");
+        menuOptions.add("Show Cart");
     }
-
+	
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -37,7 +37,7 @@ public class ManageCupboard {
                 // process options
                 switch (index) {
                     case (1):
-                        showCupboard(server, user);
+                        showCart(server, user);
                         break;
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
@@ -46,17 +46,18 @@ public class ManageCupboard {
         } while (!selected.isBack());
     }
 
-    public static void showCupboard(ServerDB server, User user) {
-        Result<Cupboard> maybeCupboard = Queries.getCupboard(server, user);
-        if (maybeCupboard.isSuccess()) {
-            Cupboard cupboard = maybeCupboard.value();
-            if (cupboard.size() == 0) {
-                System.out.println("The cupboard is empty.");
+    public static void showCart(ServerDB server, User user) {
+        Result<Cart> maybeCart = Queries.getCart(server, user);
+        if (maybeCart.isSuccess()) {
+            Cart cart = maybeCart.value();
+            if (cart.size() == 0) {
+                System.out.println("The cart is empty.");
             } else {
-                Helpers.printIngredientList(cupboard.getIngredients());
+                Helpers.printIngredientList(cart.getIngredients());
             }
         } else {
-            System.out.println(maybeCupboard.error());
+            System.out.println(maybeCart.error());
         }
     }
+    
 }

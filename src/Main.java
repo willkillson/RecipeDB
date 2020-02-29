@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import screens.Login;
+import screens.ManageCart;
 import screens.ManageCupboard;
 import screens.ManageRecipe;
 import util.Result;
@@ -67,13 +68,14 @@ public class Main {
         menuOptions = new ArrayList<>();
         menuOptions.add("Logout");
         menuOptions.add("Manage Cupboard");
+        menuOptions.add("Manage Cart");
         menuOptions.add("Manage Recipes");
     }
 
     public void run() {
         while (true) {
             User user = Login.getUser(server);
-            System.out.println("Welcome " + user.getEmail());
+            System.out.println("\nWelcome " + user.getEmail());
 
             SelectAction<String> selected = null;
             do {
@@ -88,6 +90,9 @@ public class Main {
                             ManageCupboard.view(scanner, server, user);
                             break;
                         case (2):
+                            ManageCart.view(scanner, server, user);
+                            break;   
+                        case (3):
                             ManageRecipe.view(scanner, server, user);
                             break;
                         default:

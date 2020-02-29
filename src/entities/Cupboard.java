@@ -2,6 +2,9 @@ package entities;
 
 import java.util.ArrayList;
 
+/**
+ * Cupboard of the user. Each user has one and only one.
+ */
 public class Cupboard {
     private String cupboardId;
     private ArrayList<Ingredient> ingredients;
@@ -19,6 +22,9 @@ public class Cupboard {
         return cupboardId;
     }
 
+    /**
+     * @return number of ingredients in the cupboard
+     */
     public int size() {
         return ingredients.size();
     }
