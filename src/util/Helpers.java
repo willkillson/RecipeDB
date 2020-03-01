@@ -29,4 +29,30 @@ public class Helpers {
             System.out.println(ingredient.getName());
         }
     }
+
+    public static boolean displayContinue(Scanner scanner){
+        System.out.println("Would you like to remove more? (Y)es or (N)o");
+        String choice = scanner.nextLine();
+        choice = choice.toUpperCase();
+        boolean cont = true;
+
+        switch(choice){
+            case "N":
+            {
+                cont = false;
+                break;
+            }
+            case "Y":
+            {
+                cont = true;
+                break;
+            }
+            default:
+            {
+                cont = false;
+            }
+        }
+        return cont;
+
+    }
 }

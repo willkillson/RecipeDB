@@ -78,7 +78,7 @@ public class ManageCupboard {
     
     public static void addIngredient(Scanner scanner, ServerDB server, User user) {
 
-        boolean cont = true;
+
         do {
             Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
             Result<Cupboard> maybeCupboard = CupboardQueries.getCupboard(server, user);
@@ -128,34 +128,9 @@ public class ManageCupboard {
             }
 
 
-            System.out.println("Would you like to add more? (Y)es or (N)o");
-            String choice = scanner.nextLine();
-            choice = choice.toUpperCase();
-
-            switch(choice){
-                case "N":
-                {
-                    cont = false;
-                    break;
-                }
-                case "Y":
-                {
-                    cont = true;
-                    break;
-                }
-                default:
-                {
-                    cont = false;
-                }
-            }
-
-        }while(cont);
-    	
-
+        }while(Helpers.displayContinue(scanner));
 
         return;
-    	
-
     }
 
     public static void removeIngredient(Scanner scanner, ServerDB server, User user) {
@@ -164,7 +139,6 @@ public class ManageCupboard {
     	// BUT we only need ingredients in the cupboard so showCupboard could be called here
     	// getIngredients in IngredientQueries
 
-        boolean cont = true;
         do {
 
             Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
@@ -204,31 +178,7 @@ public class ManageCupboard {
                     System.out.println(maybeMyCupboard.error());
             }
 
-
-            System.out.println("Would you like to remove more? (Y)es or (N)o");
-            String choice = scanner.nextLine();
-            choice = choice.toUpperCase();
-
-            switch(choice){
-                case "N":
-                {
-                    cont = false;
-                    break;
-                }
-                case "Y":
-                {
-                    cont = true;
-                    break;
-                }
-                default:
-                {
-                    cont = false;
-                }
-            }
-
-        }while(cont);
-
-
+        }while(Helpers.displayContinue(scanner));
 
         return;
     }
