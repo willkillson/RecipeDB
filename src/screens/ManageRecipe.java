@@ -11,12 +11,15 @@ import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
 
+/**
+ * Displays to the user and completes the actions associated with recipes.
+ */
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Logout");
+        menuOptions.add("Go back");
         menuOptions.add("Show All Recipes");
         menuOptions.add("Show Stored Recipes(WIP)");
         menuOptions.add("Rate Recipe");
