@@ -6,7 +6,10 @@ import static db.queries.CupboardQueries.removeFromCupboard;
 
 
 import db.ServerDB;
+import db.queries.CupboardQueries;
+import db.queries.IngredientQueries;
 import entities.Cupboard;
+import entities.Ingredient;
 import entities.User;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,12 +25,16 @@ public class ManageCupboard {
 
     public static ArrayList<String> menuOptions;
 
+
+
     static {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cupboard");
         menuOptions.add("Add Ingredient");
         menuOptions.add("Delete Ingredient");
+
+
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -73,19 +80,86 @@ public class ManageCupboard {
     public static void addIngredient(Scanner scanner, ServerDB server, User user) {
     	
     	//TODO: show user list of ingredients and let them pick which to add
-    	// show list once and then loop ask if they want to add another 
+    	// show list once and then loop ask if they want to add another
+
+        boolean cont = true;
+        do {
+            String ingredientId = null;
+            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
+            Result<Cupboard> myCupboard = CupboardQueries.getCupboard(server, user);
+
+            ArrayList<Ingredient> ingredients = maybeIngredient.value();
+            ArrayList<String> ingredientNames = new ArrayList<>();
+            ArrayList<String> ingredientIds = new ArrayList<>();
+
+            if(maybeIngredient.isSuccess() && myCupboard.isSuccess()){
+                for(int i = 0;i< ingredients.size();i++){
+                    ingredientNames.add(ingredients.get(i).getName());
+                    ingredientIds.add(ingredients.get(i).getIngredientId());
+                }
+
+                SelectAction<String> selected = null;
+                selected = SimpleSelect.show(scanner, ingredientNames, 1);
+                String selectionText = selected.getSelected();        // get selected index
+                int index = ingredientNames.indexOf(selectionText);
+
+
+                Cupboard cupboard = myCupboard.value();
+                if(!cupboard.contains(ingredients.get(index))){
+                    //check if the ingredient is not already in our cupboard
+                    System.out.println("Adding: "+ingredients.get(index).getName());
+                    Result result = CupboardQueries.addToCupboard(server,user,ingredientIds.get(index));
+
+                    if (result.isSuccess()) {
+                        System.out.println("\nSUCCESS: Ingredient was successfully added to the cupboard.");
+                    } else {
+                        System.out.println(result.error());
+                    }
+                }
+                else{
+                    //The ingredient we selected is already in our cupboard!
+                    System.out.println("\nFAILED: Ingredient was already in our cupboard.");
+                }
+
+            }
+            else{
+                if(maybeIngredient.isFailure())
+                    System.out.println(maybeIngredient.error());
+                if(myCupboard.isFailure())
+                    System.out.println(myCupboard.error());
+            }
+
+
+            System.out.println("Would you like to add more? (Y)es or (N)o");
+            String choice = scanner.nextLine();
+            choice = choice.toUpperCase();
+
+            switch(choice){
+                case "N":
+                {
+                    cont = false;
+                    break;
+                }
+                case "Y":
+                {
+                    cont = true;
+                    break;
+                }
+                default:
+                {
+                    cont = false;
+                }
+            }
+
+        }while(cont);
     	
-    	String ingredientId = null;
+
+
+        return;
     	
-    	Result maybeAdd = addToCupboard(server, user, ingredientId);
-    	
-    	if (maybeAdd.isSuccess()) {
-    		System.out.println("\nSUCCESS: Ingredient was successfully added to the cupboard.");
-    	} else {
-    		System.out.println(maybeAdd.error());
-    	}
+
     }
-    
+
     public static void removeIngredient(Scanner scanner, ServerDB server, User user) {
     	
     	//TODO : ... see above addIngredient()

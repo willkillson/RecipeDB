@@ -23,6 +23,15 @@ public class Cupboard {
     }
 
     /**
+     * Returns whether the cupboard contains a certain ingredient
+     * @param oIngredient
+     * @return
+     */
+    public boolean contains(Ingredient oIngredient){
+        return ingredients.contains(oIngredient);
+    }
+
+    /**
      * @return number of ingredients in the cupboard
      */
     public int size() {

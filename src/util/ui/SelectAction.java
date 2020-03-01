@@ -1,6 +1,7 @@
 package util.ui;
 
 public class SelectAction<T> {
+
     public enum Action {
         Previous,
         Back,
@@ -9,6 +10,7 @@ public class SelectAction<T> {
     }
 
     private Action action;
+
     private T selected;
 
     private SelectAction(Action action) {
