@@ -4,10 +4,8 @@ import entities.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import screens.Login;
-import screens.ManageCart;
-import screens.ManageCupboard;
-import screens.ManageRecipe;
+
+import screens.*;
 import util.Result;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
@@ -70,6 +68,7 @@ public class Main {
         menuOptions.add("Manage Cupboard");
         menuOptions.add("Manage Cart");
         menuOptions.add("Manage recipes");
+        menuOptions.add("Perform Query");
     }
 
     public void run() {
@@ -95,6 +94,8 @@ public class Main {
                         case (3):
                             ManageRecipe.view(scanner, server, user);
                             break;
+                        case (4):
+                            ManageQueries.view(scanner, server, user);
                         default:
                             System.out.println("ERROR: That selection has not been implemented.");
                     }
