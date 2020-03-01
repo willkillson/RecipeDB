@@ -220,13 +220,16 @@ public class RecipeQueries {
         try {
             stat = conn.prepareStatement(
                     "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                            "RECIPE.URL as url, Avg(ADDS.rating) as rating, ADDS.timesCooked, ADDS.lastCooked FROM RECIPE, ADDS " +
-                            "WHERE ADDS.recipeID=RECIPE.recipeID AND rating > ? GROUP BY RECIPE.recipeID LIMIT ?, ?;");
+                        "RECIPE.URL as url, Avg(ADDS.rating) as rating, Sum(ADDS.timesCooked) as timesCooked, " +
+                        "Max(ADDS.lastCooked) as lastCooked FROM RECIPE, ADDS " +
+                        "WHERE ADDS.recipeID=RECIPE.recipeID AND rating > ? " +
+                        "GROUP BY RECIPE.recipeID,  RECIPE.name,  RECIPE.url" +
+                        " LIMIT ?, ?;");
 
             stat.setDouble(1, rate);
             stat.setInt(2, start);
             stat.setInt(3, size);
-
+            String query = stat.toString();
             result = stat.executeQuery();
 
             ArrayList<Recipe> recipes = new ArrayList<>();
