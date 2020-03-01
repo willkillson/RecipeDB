@@ -30,8 +30,8 @@ public class Helpers {
         }
     }
 
-    public static boolean displayContinue(Scanner scanner){
-        System.out.println("Would you like to remove more? (Y)es or (N)o");
+    public static boolean displayContinue(Scanner scanner, String msg){
+        System.out.println(msg+" (Y)es or (N)o");
         String choice = scanner.nextLine();
         choice = choice.toUpperCase();
         boolean cont = true;
