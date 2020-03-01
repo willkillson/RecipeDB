@@ -54,6 +54,7 @@ public class ManageCupboard {
                     	break;
                     case(3):
                     	removeIngredient(scanner, server, user);
+                    	break;
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -95,13 +96,14 @@ public class ManageCupboard {
                 }
 
                 SelectAction<String> selected = null;
-                selected = SimpleSelect.show(scanner, ingredientNames, 1);
+                selected = SimpleSelect.show(scanner, ingredientNames, -1);
                 String selectionText = selected.getSelected();        // get selected index
                 int index = ingredientNames.indexOf(selectionText);
 
 
                 Cupboard cupboard = maybeCupboard.value();
-                if(!cupboard.contains(ingredients.get(index))){
+                Ingredient ing = ingredients.get(index);
+                if(!cupboard.contains(ing)){
                     //check if the ingredient is not already in our cupboard
                     System.out.println("Adding: "+ingredients.get(index).getName());
                     Result result = CupboardQueries.addToCupboard(server,user,ingredientIds.get(index));
@@ -170,9 +172,13 @@ public class ManageCupboard {
 
             if(maybeIngredient.isSuccess() && maybeMyCupboard.isSuccess()){
                 Cupboard cupboard = maybeMyCupboard.value();
+                if(cupboard.getIngredientNames().size()<1){
+                    System.out.println("Cupboard does not contain anything.");
+                    return;
+                }
 
                 SelectAction<String> selected = null;
-                selected = SimpleSelect.show(scanner, cupboard.getIngredientNames(), 1);
+                selected = SimpleSelect.show(scanner, cupboard.getIngredientNames(), -1);
 
                 String selectionText = selected.getSelected();        // get selected index
                 int index = cupboard.getIngredientNames().indexOf(selectionText);
