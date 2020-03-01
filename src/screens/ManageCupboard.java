@@ -180,7 +180,7 @@ public class ManageCupboard {
 
 
                 System.out.println("Removing: "+ ingredient.getName());
-                Result result = CupboardQueries.removeFromCupboard(server,user,ingredient.getName());
+                Result result = CupboardQueries.removeFromCupboard(server,user,ingredient.getIngredientId());
 
                 if (result.isSuccess()) {
                     System.out.println("\nSUCCESS: Ingredient was successfully removed from the cupboard.");
