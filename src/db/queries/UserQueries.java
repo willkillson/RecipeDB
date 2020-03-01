@@ -57,4 +57,6 @@ public class UserQueries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
+
+
 }
