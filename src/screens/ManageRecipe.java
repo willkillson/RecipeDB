@@ -21,7 +21,7 @@ public class ManageRecipe {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show All Recipes");
-        menuOptions.add("Show Stored Recipes(WIP)");
+        menuOptions.add("Show Stored Recipes");
         menuOptions.add("Rate Recipe");
         menuOptions.add("Add Recipe To Cart");
         menuOptions.add("Delete Recipe");
@@ -41,8 +41,27 @@ public class ManageRecipe {
                     case (1):
                         showAllRecipes(scanner, server, user);
                         break;
+                    case (2):
+                    {
+                        //TODO
+                        showStoredRecipes();
+                        break;
+                    }
                     case (3):
                         rateRecipe(scanner, server, user);
+                    case (4):
+                    {
+                        //TODO
+                        addRecipeCart();
+                        break;
+                    }
+                    case (5):
+                    {
+
+                        //TODO
+                        deleteRecipeCart();
+                        break;
+                    }
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -125,6 +144,38 @@ public class ManageRecipe {
                 return;
             }
         } while (!action.isBack());
+    }
+
+    public static void showStoredRecipes(){
+        /*
+
+            Lists all the stored recipes that the user has added.
+
+         */
+        System.out.println("TODO Show Stored Recipes");
+        //TODO
+    }
+
+    public static void addRecipeCart(){
+        /*
+
+            Adds a recipe by ID from a list of recipes.
+
+            We should list all the recipes, before asking which recipe they would like to add.
+
+         */
+        System.out.println("TODO Add Recipe To Cart");
+        //TODO
+    }
+
+    public static void deleteRecipeCart(){
+        /*
+
+            Removes a recipe from a user.
+
+         */
+        System.out.println("TODO Delete Recipe");
+        //TODO
     }
 
     /**public static void addRecipe(Scanner scanner, ServerDB server, User user) {
