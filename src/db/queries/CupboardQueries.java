@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import util.Result;
 
+/**
+ * Queries regarding a user's cupboard.
+ */
 public class CupboardQueries {
     /**
      * Retrieves cupboard of the user from the database.
@@ -48,6 +51,77 @@ public class CupboardQueries {
                 if (result != null) {
                     result.close();
                 }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return Result.failure("There was an error processing your request. " +
+            "Please contact software developer with the previous output");
+    }
+    
+    /**
+     * Adds an ingredient to the cupboard of the user in the database.
+     */
+    public static Result addToCupboard(ServerDB server, User user, String ingredientId) {
+    	 Connection conn = server.getConnection();
+         PreparedStatement stat = null;
+         try {
+        	 stat = conn.prepareStatement("INSERT INTO STORES VALUES (?,?)");
+        	 
+        	 stat.setString(1, user.getCupboardId());
+             stat.setString(2, ingredientId);
+             
+             stat.executeUpdate();
+             //conn.commit(); // only if autoCommit(false)
+             
+             return Result.success(null);
+             
+//         } catch (MySQLIntegrityConstraintViolationException e) {
+// 			return Result.failure("\nERROR: The ingredient entered did not "
+// 					+ "match any in the cupboard.");
+         } catch(SQLException e) {
+        	 e.printStackTrace();
+         } finally {
+             try {
+                 if (stat != null) {
+                     stat.close();
+                 }
+             } catch (SQLException se) {
+                 se.printStackTrace();
+             }
+         }
+         return Result.failure("There was an error processing your request. " +
+             "Please contact software developer with the previous output");
+    }
+    
+    /**
+     * Removes an ingredient from the cupboard of the user in the database.
+     */
+    public static Result removeFromCupboard(ServerDB server, User user, String ingredientId) {
+    	Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        try {
+        	stat = conn.prepareStatement("DELETE FROM STORES WHERE "
+        			+ "cupboardID = ? AND ingredientID = ?");
+       	 
+       	 	stat.setString(1, user.getCupboardId());
+            stat.setString(2, ingredientId);
+            
+            stat.executeUpdate();
+            //conn.commit(); // only if autoCommit(false)
+            
+            return Result.success(null);
+            
+//        } catch (MySQLIntegrityConstraintViolationException e) {
+//			return Result.failure("\nERROR: The ingredient entered did not "
+//					+ "match any in the cupboard.");
+        } catch(SQLException e) {
+       	 e.printStackTrace();
+        } finally {
+            try {
                 if (stat != null) {
                     stat.close();
                 }

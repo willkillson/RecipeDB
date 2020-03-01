@@ -1,6 +1,8 @@
 package screens;
 
 import static db.queries.CupboardQueries.getCupboard;
+import static db.queries.CupboardQueries.addToCupboard;
+import static db.queries.CupboardQueries.removeFromCupboard;
 
 
 import db.ServerDB;
@@ -43,7 +45,10 @@ public class ManageCupboard {
                         showCupboard(server, user);
                         break;
                     case(2):
-
+                    	addIngredient(scanner, server, user);
+                    	break;
+                    case(3):
+                    	removeIngredient(scanner, server, user);
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -63,5 +68,38 @@ public class ManageCupboard {
         } else {
             System.out.println(maybeCupboard.error());
         }
+    }
+    
+    public static void addIngredient(Scanner scanner, ServerDB server, User user) {
+    	
+    	//TODO: show user list of ingredients and let them pick which to add
+    	// show list once and then loop ask if they want to add another 
+    	
+    	String ingredientId = null;
+    	
+    	Result maybeAdd = addToCupboard(server, user, ingredientId);
+    	
+    	if (maybeAdd.isSuccess()) {
+    		System.out.println("\nSUCCESS: Ingredient was successfully added to the cupboard.");
+    	} else {
+    		System.out.println(maybeAdd.error());
+    	}
+    }
+    
+    public static void removeIngredient(Scanner scanner, ServerDB server, User user) {
+    	
+    	//TODO : ... see above addIngredient()
+    	// BUT we only need ingredients in the cupboard so showCupboard could be called here
+    	// getIngredients in IngredientQueries
+    	
+    	String ingredientId = null;
+    	
+    	Result maybeRemove = removeFromCupboard(server, user, ingredientId);
+    	
+    	if (maybeRemove.isSuccess()) {
+    		System.out.println("\nSUCCESS: Ingredient was successfully removed from the cupboard.");
+    	} else {
+    		System.out.println(maybeRemove.error());
+    	}
     }
 }
