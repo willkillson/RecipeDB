@@ -1,10 +1,15 @@
 package screens;
 
 import static db.queries.CupboardQueries.getCupboard;
+import static db.queries.CupboardQueries.addToCupboard;
+import static db.queries.CupboardQueries.removeFromCupboard;
 
 
 import db.ServerDB;
+import db.queries.CupboardQueries;
+import db.queries.IngredientQueries;
 import entities.Cupboard;
+import entities.Ingredient;
 import entities.User;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,6 +29,10 @@ public class ManageCupboard {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cupboard");
+        menuOptions.add("Add Ingredient");
+        menuOptions.add("Delete Ingredient");
+
+
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -40,6 +49,12 @@ public class ManageCupboard {
                     case (1):
                         showCupboard(server, user);
                         break;
+                    case(2):
+                    	addIngredient(scanner, server, user);
+                    	break;
+                    case(3):
+                    	removeIngredient(scanner, server, user);
+                    	break;
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -59,5 +74,162 @@ public class ManageCupboard {
         } else {
             System.out.println(maybeCupboard.error());
         }
+    }
+    
+    public static void addIngredient(Scanner scanner, ServerDB server, User user) {
+
+        boolean cont = true;
+        do {
+            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
+            Result<Cupboard> maybeCupboard = CupboardQueries.getCupboard(server, user);
+
+            if(maybeIngredient.isSuccess() && maybeCupboard.isSuccess()){
+                ArrayList<Ingredient> ingredients = maybeIngredient.value();
+                ArrayList<String> ingredientNames = new ArrayList<>();
+                ArrayList<String> ingredientIds = new ArrayList<>();
+
+
+
+                for(int i = 0;i< ingredients.size();i++){
+                    ingredientNames.add(ingredients.get(i).getName());
+                    ingredientIds.add(ingredients.get(i).getIngredientId());
+                }
+
+                SelectAction<String> selected = null;
+                selected = SimpleSelect.show(scanner, ingredientNames, -1);
+                String selectionText = selected.getSelected();        // get selected index
+                int index = ingredientNames.indexOf(selectionText);
+
+
+                Cupboard cupboard = maybeCupboard.value();
+                Ingredient ing = ingredients.get(index);
+                if(!cupboard.contains(ing)){
+                    //check if the ingredient is not already in our cupboard
+                    System.out.println("Adding: "+ingredients.get(index).getName());
+                    Result result = CupboardQueries.addToCupboard(server,user,ingredientIds.get(index));
+
+                    if (result.isSuccess()) {
+                        System.out.println("\nSUCCESS: Ingredient was successfully added to the cupboard.");
+                    } else {
+                        System.out.println(result.error());
+                    }
+                }
+                else{
+                    //The ingredient we selected is already in our cupboard!
+                    System.out.println("\nFAILED: Ingredient was already in our cupboard.");
+                }
+
+            }
+            else{
+                if(maybeIngredient.isFailure())
+                    System.out.println(maybeIngredient.error());
+                if(maybeCupboard.isFailure())
+                    System.out.println(maybeCupboard.error());
+            }
+
+
+            System.out.println("Would you like to add more? (Y)es or (N)o");
+            String choice = scanner.nextLine();
+            choice = choice.toUpperCase();
+
+            switch(choice){
+                case "N":
+                {
+                    cont = false;
+                    break;
+                }
+                case "Y":
+                {
+                    cont = true;
+                    break;
+                }
+                default:
+                {
+                    cont = false;
+                }
+            }
+
+        }while(cont);
+    	
+
+
+        return;
+    	
+
+    }
+
+    public static void removeIngredient(Scanner scanner, ServerDB server, User user) {
+
+    	// : ... see above addIngredient()
+    	// BUT we only need ingredients in the cupboard so showCupboard could be called here
+    	// getIngredients in IngredientQueries
+
+        boolean cont = true;
+        do {
+
+            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
+            Result<Cupboard> maybeMyCupboard = CupboardQueries.getCupboard(server, user);
+
+            if(maybeIngredient.isSuccess() && maybeMyCupboard.isSuccess()){
+                Cupboard cupboard = maybeMyCupboard.value();
+                if(cupboard.getIngredientNames().size()<1){
+                    System.out.println("Cupboard does not contain anything.");
+                    return;
+                }
+
+                SelectAction<String> selected = null;
+                selected = SimpleSelect.show(scanner, cupboard.getIngredientNames(), -1);
+
+                String selectionText = selected.getSelected();        // get selected index
+                int index = cupboard.getIngredientNames().indexOf(selectionText);
+                Ingredient ingredient = cupboard.getIngredient(index);
+
+
+                System.out.println("Removing: "+ ingredient.getName());
+                Result result = CupboardQueries.removeFromCupboard(server,user,ingredient.getIngredientId());
+
+                if (result.isSuccess()) {
+                    System.out.println("\nSUCCESS: Ingredient was successfully removed from the cupboard.");
+                }
+                else{
+
+                    System.out.println("\nFAILED: Ingredient is not in our cupboard.");
+                }
+
+            }
+            else{
+                if(maybeIngredient.isFailure())
+                    System.out.println(maybeIngredient.error());
+                if(maybeMyCupboard.isFailure())
+                    System.out.println(maybeMyCupboard.error());
+            }
+
+
+            System.out.println("Would you like to remove more? (Y)es or (N)o");
+            String choice = scanner.nextLine();
+            choice = choice.toUpperCase();
+
+            switch(choice){
+                case "N":
+                {
+                    cont = false;
+                    break;
+                }
+                case "Y":
+                {
+                    cont = true;
+                    break;
+                }
+                default:
+                {
+                    cont = false;
+                }
+            }
+
+        }while(cont);
+
+
+
+        return;
     }
 }
