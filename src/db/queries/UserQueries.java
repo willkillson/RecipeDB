@@ -34,12 +34,8 @@ public class UserQueries {
             if (!result.next()) {
                 return Result.failure("Error: invalid username/password");
             }
-            String userId = result.getString("userID");
-            String email = result.getString("cupboardID");
-            String cupboardID = result.getString("cupboardID");
-            String cartID = result.getString("cartID");
 
-            return Result.success(new entities.User(userId, email, cupboardID, cartID));
+            return Result.success(ResultSetParser.parseUser(result));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

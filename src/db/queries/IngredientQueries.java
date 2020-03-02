@@ -30,12 +30,7 @@ public class IngredientQueries {
         	
         	result = stat.executeQuery();
         	
-        	ArrayList<Ingredient> ingredients = new ArrayList<>();
-            while (result.next()) {
-                String ingredientID = result.getString("ingredientID");
-                String name = result.getString("name");
-                ingredients.add(new Ingredient(ingredientID, name));
-            }
+        	ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
         	return Result.success(ingredients);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,6 +49,4 @@ public class IngredientQueries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
-
-    
 }

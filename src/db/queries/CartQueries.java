@@ -36,12 +36,8 @@ public class CartQueries {
             String thing = stat.toString();
             result = stat.executeQuery();
 
-            ArrayList<Ingredient> ingredients = new ArrayList<>();
-            while (result.next()) {
-                String ingredientID = result.getString("ingredientID");
-                String name = result.getString("name");
-                ingredients.add(new Ingredient(ingredientID, name));
-            }
+            ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
+
             return Result.success(new entities.Cart(user.getCartId(), ingredients));
         } catch (SQLException e) {
             e.printStackTrace();
