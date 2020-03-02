@@ -57,11 +57,10 @@ public class ManageCart {
                     }
                     case (1)://Show current recipes
                     {
-                        //TODO
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (2)://TODO Rate recipe
+                    case (2):
                     {
                         rateRecipe( server, user);
                         break;
@@ -222,8 +221,5 @@ public class ManageCart {
 
 
     }
-
-
-
 
 }
