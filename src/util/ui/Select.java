@@ -12,7 +12,7 @@ public class Select<T> {
             if (action != null && action.isFailure()) {
                 System.out.println(action.error());
             }
-            System.out.println("Select an option or action below");
+            System.out.println("\nSelect an option or action below");
             System.out.println("---------------------------------");
             System.out.println("Items");
             System.out.println("---------------------------------");
@@ -66,11 +66,11 @@ public class Select<T> {
             int parsed = Integer.parseInt(input);
             T value = choices.get(parsed);
             SelectAction<T> action = SelectAction.Selected(value);
-            return (parsed < 0 || parsed >= choices.size())
-                ? Result.failure("'' is not a valid selection")
-                : Result.success(action);
+            return Result.success(action);
         } catch (NumberFormatException e) {
             return Result.failure("'" + input + "' is not a valid action");
+        } catch (IndexOutOfBoundsException e) {
+        	return Result.failure("'" + input + "' is not a valid selection");
         }
     }
 }

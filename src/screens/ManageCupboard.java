@@ -80,7 +80,7 @@ public class ManageCupboard {
 
 
         do {
-            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
+            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server);
             Result<Cupboard> maybeCupboard = CupboardQueries.getCupboard(server, user);
 
             if(maybeIngredient.isSuccess() && maybeCupboard.isSuccess()){
@@ -141,7 +141,7 @@ public class ManageCupboard {
 
         do {
 
-            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server,user);
+            Result<ArrayList<Ingredient>> maybeIngredient = IngredientQueries.getIngredients(server);
             Result<Cupboard> maybeMyCupboard = CupboardQueries.getCupboard(server, user);
 
             if(maybeIngredient.isSuccess() && maybeMyCupboard.isSuccess()){

@@ -20,6 +20,7 @@ import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with recipes.
+ * Note that these are not user-specific.
  */
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;
@@ -30,6 +31,7 @@ public class ManageRecipe {
         menuOptions.add("Show All Recipes");
         menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
+        menuOptions.add("Add Recipe");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -46,6 +48,7 @@ public class ManageRecipe {
                     case (1)://Show All Recipes
                         showAllRecipes(scanner, server, user);
                         break;
+
                     case (2):
                     {
                         addRecipeGlobal(scanner,server);
@@ -53,7 +56,7 @@ public class ManageRecipe {
                     }
                     case (3)://TODO Delete Recipe
                     {
-                        deleteRecipeCart();
+                        deleteRecipe(scanner,server);
                         break;
                     }
                     default:
@@ -99,19 +102,50 @@ public class ManageRecipe {
         } while (!action.isBack()); // back button exits the screen
     }
 
-    public static void deleteRecipeCart(){
-        /*
+    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                RecipeQueries.getRecipes(server, 0, 100);
 
-            Removes a recipe from a user.
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                int i =0;
+                for (Recipe recipe : recipes) {
+                    System.out.println(i);
+                    i++;
+                    Helpers.showRecipe(recipe);
+                }
+                Scanner in = new Scanner(System.in);
+                System.out.println("Which recipe would you like to update the rating for?: ");
+                int recipe = in.nextInt();
+                System.out.println("What would you like to update the rating to?: ");
+                int rating = in.nextInt();
+                Recipe update = recipes.get(recipe);
+                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
+                return;
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack());
+    }
 
-         */
+
+
+
+    public static void deleteRecipe(Scanner scanner, ServerDB server){
+
+            //TODO modifies the global recipes, not user dependent
+
+
         System.out.println("TODO Delete Recipe");
         //TODO
     }
 
-    public static void addRecipeGlobal(Scanner scanner,ServerDB server){
 
-
+    public static void addRecipeGlobal(Scanner scanner, ServerDB server){
             System.out.println("Enter a RecipeID for the recipe" );
             String recipeID = scanner.nextLine();
             System.out.println("Enter a name for the recipe" );
@@ -123,5 +157,4 @@ public class ManageRecipe {
             RecipeQueries.addRecipe(server,recipe);
             return;
     }
-
 }
