@@ -117,6 +117,11 @@ public class ManageCart {
     }
 
     public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+
+//TODO this method should interact with user, but it current does not
+
+//TODO this method is flawed as it is updating the global average rating, not the rating in relationship ADDS. See Dilverable 3
+
         SelectAction<Recipe> action;
         do {
             //Get records
@@ -206,6 +211,8 @@ public class ManageCart {
         //TODO 2. get all the ingredients that we don't have in our cupboard
 
         //TODO 3. populate our cart by filling our CONTAINS relation with ingredients from 2.
+
+
 
         System.out.println("buildShoppingCart() TODO");
     }
