@@ -25,9 +25,10 @@ public class RecipeQueries {
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                    "RECIPE.URL as url, Avg(ADDS.rating) as rating, ADDS.timesCooked, ADDS.lastCooked FROM RECIPE, ADDS " +
-                    "WHERE ADDS.recipeID=RECIPE.recipeID GROUP BY RECIPE.recipeID LIMIT ?, ?;");
+                "SELECT RECIPE.recipeID as recipeID, RECIPE.name as NAME, RECIPE.URL as url, " +
+                    "Avg(ADDS.rating) as rating, Sum(ADDS.timesCooked) as timesCooked, Max(ADDS.lastCooked) as lastCooked FROM " +
+                    "RECIPE LEFT JOIN ADDS ON ADDS.recipeID=RECIPE.recipeID " +
+                    "GROUP BY RECIPE.recipeID, Recipe.name, recipe.url LIMIT ?,?;");
 
             stat.setInt(1, start);
             stat.setInt(2, size);
