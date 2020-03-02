@@ -51,13 +51,11 @@ public class ManageCart {
                     }
                     case (2)://showStoredRecipes
                     {
-                        //TODO
                         showStoredRecipes(server, user);
                         break;
                     }
                     case (3)://rateRecipe
                     {
-                        //TODO
                         rateRecipe(scanner, server, user);
                         break;
                     }
@@ -106,7 +104,36 @@ public class ManageCart {
     }
 
     public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
-        SelectAction<Recipe> action;
+        /*
+
+            This function looks at all the users recipes in the ADDS relation (see documention deliverable 2)
+            and displays those recipes for the user to rate on.
+
+         */
+
+        //get our recipes from ADDS relation
+        Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
+
+        if(maybeRecipes.isSuccess()){
+            ArrayList<Recipe> recipes = maybeRecipes.value();
+            if(recipes.size()>0){
+                System.out.print("Update Rating  --  ");
+                SelectAction<Recipe> selected = SimpleSelect.show(scanner,recipes,-1);
+                Recipe rec = selected.getSelected();
+
+                System.out.println("What would you like to update the rating to?: ");
+                Integer rating = scanner.nextInt();
+                RecipeQueries.updateRecipe(server, rec.getRecipeId(), recipes, rating);
+            }
+            else{
+                System.out.println("No recipes are in your cart.");
+            }
+        }
+        else{
+            System.out.println(maybeRecipes.error());
+        }
+
+/*        SelectAction<Recipe> action;
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
@@ -114,6 +141,8 @@ public class ManageCart {
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
+
+                showStoredRecipes(server,user);
                 int i =0;
                 for (Recipe recipe : recipes) {
                     System.out.println(i);
@@ -132,7 +161,7 @@ public class ManageCart {
                 System.out.println(recipesR.error());
                 return;
             }
-        } while (!action.isBack());
+        } while (!action.isBack());*/
     }
 
     public static void addRecipeCart(Scanner scanner, ServerDB server, User user){

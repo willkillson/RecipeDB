@@ -68,7 +68,7 @@ public class RecipeQueries {
      *
      * @param server
      * @param usr
-     * @return all the recipes that the user hasn't rated on.
+     * @return
      */
     public static Result<ArrayList<entities.Recipe>> getAddsRecipes(ServerDB server, User usr){
 
@@ -77,13 +77,12 @@ public class RecipeQueries {
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                    "select RECIPE.recipeID, RECIPE.name, ADDS.rating, \n" +
-                            "RECIPE.url, ADDS.timesCooked, ADDS.lastCooked\n" +
-                            "from recipe,ADDS\n" +
-                            "where ADDS.rating IS NULL\n" +
-                            "AND RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
-                            "From ADDS\n" +
-                            "where ADDS.userID = ?);");
+                    "select RECIPE.recipeID, RECIPE.name, RECIPE.url, \n" +
+                            "ADDS.rating, ADDS.timesCooked, ADDS.lastCooked, ADDS.userID\n" +
+                            "from adds, recipe\n" +
+                            "where adds.recipeID = recipe.recipeID\n" +
+                            "AND ADDS.rating IS NULL " +
+                            "AND adds.userID=?;");
 
             stat.setString(1, usr.getUserId());
 
