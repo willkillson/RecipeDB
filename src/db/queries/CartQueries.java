@@ -56,4 +56,32 @@ public class CartQueries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
+
+    public static void clearContainsRelation(ServerDB server, User user){
+        Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+
+            stat = conn.prepareStatement("DELETE FROM CONTAINS WHERE CONTAINS.cartID=?;");
+            stat.setString(1, user.getCartId());
+            stat.executeUpdate();
+
+            return;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        System.out.println("There was an error processing your request.");
+    }
 }

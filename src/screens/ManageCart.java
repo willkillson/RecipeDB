@@ -4,6 +4,7 @@ import static db.queries.CartQueries.getCart;
 
 
 import db.ServerDB;
+import db.queries.CartQueries;
 import db.queries.RecipeQueries;
 import entities.Cart;
 import entities.Recipe;
@@ -203,10 +204,11 @@ public class ManageCart {
 
     }
 
-    public static void buildShoppingCart(){
+    public static void buildShoppingCart(ServerDB server, User user){
         //TODO This function should populate the CONTAINS relationship, see Deliverable 2
 
-        //TODO 1. remove everything that is in our current cart
+        //1. remove everything that is in our current contains relationship
+        CartQueries.clearContainsRelation(server,user);
 
         //TODO 2. get all the ingredients that we don't have in our cupboard
 
