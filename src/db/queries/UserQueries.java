@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import util.Result;
 
 public class UserQueries {
+
     /**
      * Retrieve user from database and verify password
      *

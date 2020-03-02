@@ -16,6 +16,7 @@ import java.util.Scanner;
 import javax.swing.text.html.Option;
 
 import entities.User;
+import org.apache.derby.client.am.DateTime;
 import util.Result;
 
 public class RecipeQueries {
@@ -55,7 +56,6 @@ public class RecipeQueries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
-
 
     /**
      *
@@ -102,8 +102,6 @@ public class RecipeQueries {
                 "Please contact software developer with the previous output");
 
     }
-
-
 
     public static void addRecipe(ServerDB server, Recipe recipe, ArrayList<Lists> lists) {
         Connection conn = server.getConnection();
@@ -236,28 +234,28 @@ public class RecipeQueries {
     }
 
     //method to update the rating of a recipe
-    public static void updateRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes, int rating) {
-        Recipe update=null;
-        for (Recipe recipe : recipes) {
-            if (ID == recipe.getRecipeId()) {
-                update = recipe;
-                recipe.setRating(rating);
-            }
-        }
-        if (update == null) {
-            System.out.println("Recipe with that ID does not exist");
-            return;
-        }
+    public static void updateRecipe(ServerDB server, User user,Recipe recipe, float rating) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
 
+        java.util.Date dt = new java.util.Date();
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = sdf.format(dt);
+
         try {
             stat = conn.prepareStatement(
-                    "UPDATE ADDS SET rating = ? WHERE recipeID=?;");
+                    "UPDATE ADDS " +
+                            "SET ADDS.lastCooked=?,ADDS.timesCooked = ?, ADDs.rating=? " +
+                            "WHERE ADDS.recipeID=? " +
+                            "AND ADDS.userID=?;");
 
-            stat.setInt(1, rating);
-            stat.setString(2, ID);
+            stat.setString(1, currentTime);
+            stat.setInt(2, recipe.getTimesCooked()+1);
+            stat.setFloat(3, rating);
+
+            stat.setString(4, recipe.getRecipeId());
+            stat.setString(5, user.getUserId());
             stat.executeUpdate();
 
 

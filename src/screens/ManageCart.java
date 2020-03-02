@@ -61,24 +61,16 @@ public class ManageCart {
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (2)://Rate recipe
+                    case (2)://TODO Rate recipe
                     {
-                        //TODO
-                        rateRecipe(scanner, server, user);
+                        rateRecipe( server, user);
                         break;
                     }
                     case (3)://addRecipeCart
                     {
-                        //TODO
                         addRecipeCart(scanner, server, user);
                         break;
                     }
-                    case (4)://TODO Build cart
-                    {
-                        buildShoppingCart(server,user);
-                        break;
-                    }
-
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -121,39 +113,42 @@ public class ManageCart {
         }
     }
 
-    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+    public static void rateRecipe(ServerDB server, User user) {
+        Scanner scanner = new Scanner(System.in);
 
-//TODO this method should interact with user, but it current does not
-
-//TODO this method is flawed as it is updating the global average rating, not the rating in relationship ADDS. See Dilverable 3
-
+        final int increment = 5;
+        int start = 0;
         SelectAction<Recipe> action;
         do {
             //Get records
-            Result<ArrayList<Recipe>> recipesR =
-                    RecipeQueries.getRecipes(server, 0, 100);
+            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getRecipes(server, start, increment);
 
-            if (recipesR.isSuccess()) { // got records
-                ArrayList<Recipe> recipes = recipesR.value();
-                int i =0;
-                for (Recipe recipe : recipes) {
-                    System.out.println(i);
-                    i++;
-                    Helpers.showRecipe(recipe);
-                }
+            if (maybeRecipes.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = maybeRecipes.value();
 
-                System.out.println("Which recipe would you like to update the rating for?: ");
-                int recipe = scanner.nextInt();
-                System.out.println("What would you like to update the rating to?: ");
-                int rating = scanner.nextInt();
-                Recipe update = recipes.get(recipe);
-                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
-                return;
+                boolean hasPrevious = start > 0;
+                boolean hasNext = recipes.size() == increment;
+
+                action = PaginatedSelect.show(scanner, recipes, hasPrevious, hasNext);
+
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+
+                    System.out.println("Which recipe would you like to update the rating for?: ");
+                    String rating = scanner.nextLine();
+                    System.out.println("What would you like to update the rating to?: ");
+                    RecipeQueries.updateRecipe(server,user, action.getSelected(), Float.parseFloat(rating));
+
+                } else { /* isback() handled as exit condition */ }
+
             } else { // system failure
-                System.out.println(recipesR.error());
+                System.out.println(maybeRecipes.error());
                 return;
             }
-        } while (!action.isBack());
+        } while (!action.isBack()); // back button exits the screen
     }
 
     public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
@@ -192,9 +187,7 @@ public class ManageCart {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
-                    //TODO in RecipeQueries.addRecipeCart see note
                     RecipeQueries.addRecipeCart(server,user,action.getSelected());
-
                     System.out.println("Adding recipe: "+action.getSelected().getName());
 
                 } else { /* isback() handled as exit condition */ }
