@@ -35,16 +35,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,16 +82,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -303,16 +285,7 @@ public class RecipeQueries {
             String query = stat.toString();
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -349,16 +322,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
