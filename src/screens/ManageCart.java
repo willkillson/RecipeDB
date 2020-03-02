@@ -4,8 +4,12 @@ import static db.queries.CartQueries.getCart;
 
 
 import db.ServerDB;
+import db.queries.RecipeQueries;
 import entities.Cart;
+import entities.Recipe;
 import entities.User;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
@@ -24,6 +28,9 @@ public class ManageCart {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cart");
+        menuOptions.add("Show Current Recipes");
+        menuOptions.add("Rate Recipe");
+        menuOptions.add("Add Recipe To Cart");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -37,9 +44,28 @@ public class ManageCart {
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1):
+                    case (1)://showCart
+                    {
                         showCart(server, user);
                         break;
+                    }
+                    case (2)://showStoredRecipes
+                    {
+                        showStoredRecipes(server, user);
+                        break;
+                    }
+                    case (3)://rateRecipe
+                    {
+                        rateRecipe(scanner, server, user);
+                        break;
+                    }
+                    case (4)://addRecipeCart
+                    {
+                        //TODO
+                        addRecipeCart(scanner, server, user);
+                        break;
+                    }
+
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
                 }
@@ -60,5 +86,95 @@ public class ManageCart {
             System.out.println(maybeCart.error());
         }
     }
+
+    public static void showStoredRecipes(ServerDB server, User user){
+        /*
+
+            Lists all the stored recipes that the user has added.
+
+         */
+        Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
+        if(maybeRecipes.isSuccess()){
+            ArrayList<Recipe> recipes = maybeRecipes.value();
+            Helpers.printRecipes(recipes);
+        }
+        else{
+            System.out.println(maybeRecipes.error());
+        }
+    }
+
+    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+        /*
+
+            This function looks at all the users recipes in the ADDS relation (see documention deliverable 2)
+            and displays those recipes for the user to rate on.
+
+         */
+
+        //get our recipes from ADDS relation
+        Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
+
+        if(maybeRecipes.isSuccess()){
+            ArrayList<Recipe> recipes = maybeRecipes.value();
+            if(recipes.size()>0){
+                System.out.print("Update Rating  --  ");
+                SelectAction<Recipe> selected = SimpleSelect.show(scanner,recipes,-1);
+                Recipe rec = selected.getSelected();
+
+                System.out.println("What would you like to update the rating to?: ");
+                Integer rating = scanner.nextInt();
+                RecipeQueries.updateRecipe(server, rec.getRecipeId(), recipes, rating);
+            }
+            else{
+                System.out.println("No recipes are in your cart.");
+            }
+        }
+        else{
+            System.out.println(maybeRecipes.error());
+        }
+
+/*        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                    RecipeQueries.getRecipes(server, 0, 100);
+
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+
+                showStoredRecipes(server,user);
+                int i =0;
+                for (Recipe recipe : recipes) {
+                    System.out.println(i);
+                    i++;
+                    Helpers.showRecipe(recipe);
+                }
+
+                System.out.println("Which recipe would you like to update the rating for?: ");
+                int recipe = scanner.nextInt();
+                System.out.println("What would you like to update the rating to?: ");
+                int rating = scanner.nextInt();
+                Recipe update = recipes.get(recipe);
+                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
+                return;
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack());*/
+    }
+
+    public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
+        /*
+
+            Adds a recipe by ID from a list of recipes.
+
+            We should list all the recipes, before asking which recipe they would like to add.
+
+         */
+        System.out.println("TODO Add Recipe To Cart");
+        //TODO
+    }
+
 
 }

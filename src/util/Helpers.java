@@ -1,6 +1,8 @@
 package util;
 
 import entities.Ingredient;
+import entities.Recipe;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -54,5 +56,25 @@ public class Helpers {
         }
         return cont;
 
+    }
+
+    /**
+     * prints individual recipe info. This should be expanded to include an option for adding the recipe
+     * to the user list
+     *
+     * @param recipe
+     */
+    public static void showRecipe(Recipe recipe) {
+        System.out.println("Recipe: " + recipe.getName());
+        System.out.println("\tUrl: " + recipe.getUrl());
+        System.out.println("\tRating: " + recipe.getRating().get());
+    }
+
+    public static void printRecipes(Iterable<Recipe> recipes){
+        System.out.println("Recipes");
+        System.out.println("--------------");
+        for(Recipe rep : recipes){
+            System.out.println(recipes.toString());
+        }
     }
 }

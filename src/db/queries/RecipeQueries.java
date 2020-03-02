@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Scanner;
 import javax.swing.text.html.Option;
+
+import entities.User;
 import util.Result;
 
 public class RecipeQueries {
@@ -62,6 +64,60 @@ public class RecipeQueries {
     }
 
 
+    /**
+     *
+     * @param server
+     * @param usr
+     * @return
+     */
+    public static Result<ArrayList<entities.Recipe>> getAddsRecipes(ServerDB server, User usr){
+
+        Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+            stat = conn.prepareStatement(
+                    "select RECIPE.recipeID, RECIPE.name, RECIPE.url, \n" +
+                            "ADDS.rating, ADDS.timesCooked, ADDS.lastCooked, ADDS.userID\n" +
+                            "from adds, recipe\n" +
+                            "where adds.recipeID = recipe.recipeID\n" +
+                            "AND ADDS.rating IS NULL " +
+                            "AND adds.userID=?;");
+
+            stat.setString(1, usr.getUserId());
+
+
+            result = stat.executeQuery();
+
+            ArrayList<Recipe> recipes = new ArrayList<>();
+            while (result.next()) {
+                String recipeID = result.getString("recipeID");
+                String name = result.getString("name");
+                Double rating = result.getDouble("rating");
+                String url = result.getString("url");
+                int timesCooked = result.getInt("timesCooked");
+                Date lastCooked = result.getDate("lastCooked");
+                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
+            }
+            return Result.success(recipes);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return Result.failure("There was an error processing your request. " +
+                "Please contact software developer with the previous output");
+
+    }
 
 
 

@@ -11,4 +11,5 @@ public class SimpleSelect {
         return (items.indexOf(action.getSelected()) == backIndex)
             ? SelectAction.Back() : action;
     }
+
 }
