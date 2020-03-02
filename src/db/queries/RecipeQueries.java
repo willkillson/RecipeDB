@@ -1,6 +1,7 @@
 package db.queries;
 
 import db.ServerDB;
+import entities.Lists;
 import entities.Recipe;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -105,7 +106,7 @@ public class RecipeQueries {
 
 
 
-    public static void addRecipe(ServerDB server, Recipe recipe) {
+    public static void addRecipe(ServerDB server, Recipe recipe, ArrayList<Lists> lists) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
@@ -117,9 +118,17 @@ public class RecipeQueries {
             stat.setString(1, recipe.getRecipeId());
             stat.setString(2, recipe.getName());
             stat.setString(3, recipe.getUrl());
-
-
             stat.executeUpdate();
+
+            for(int i = 0;i< lists.size();i++){
+                stat = conn.prepareStatement(
+                        "INSERT INTO LISTS VALUES(?, ?, ?)");
+                stat.setString(1, recipe.getRecipeId());
+                stat.setString(2, lists.get(i).ingredientID);
+                stat.setBoolean(3, lists.get(i).isRequired);
+                stat.executeUpdate();
+            }
+
             System.out.println("Recipe: " + recipe.getName() + " inserted into the database");
             return;
         } catch (SQLException e) {

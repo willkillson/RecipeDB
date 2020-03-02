@@ -126,7 +126,7 @@ public class ManageCupboard {
             }
 
 
-        }while(Helpers.displayContinue(scanner,"Would you like to add more?"));
+        }while(Helpers.displayContinue("Would you like to add more?"));
 
         return;
     }
@@ -176,7 +176,7 @@ public class ManageCupboard {
                     System.out.println(maybeMyCupboard.error());
             }
 
-        }while(Helpers.displayContinue(scanner, "Would you like to remove more?"));
+        }while(Helpers.displayContinue("Would you like to remove more?"));
 
         return;
     }

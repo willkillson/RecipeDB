@@ -44,7 +44,9 @@ public class Helpers {
      * @param msg the question to be answered
      * @return true if the actions should be continued, false if not
      */
-    public static boolean displayContinue(Scanner scanner, String msg){
+    public static boolean displayContinue(String msg){
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println(msg+" (Y)es or (N)o");
         String choice = scanner.nextLine();
         choice = choice.toUpperCase();
