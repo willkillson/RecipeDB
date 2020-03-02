@@ -1,6 +1,7 @@
 package db.queries;
 
 import entities.Ingredient;
+import entities.Lists;
 import entities.Recipe;
 import entities.User;
 import java.sql.ResultSet;
@@ -10,6 +11,28 @@ import java.util.Date;
 import java.util.Optional;
 
 public class ResultSetParser {
+
+   public static ArrayList<Lists> parseLists(ResultSet result) throws SQLException {
+        ArrayList<Lists> lists = new ArrayList<>();
+        while (result.next()) {
+            lists.add(parseList(result));
+        }
+        return lists;
+    }
+
+    public static Lists parseList(ResultSet result) throws SQLException {
+
+        String recipeID = null;
+        String ingredientID = null;
+        boolean isRequired = false;
+
+        recipeID = result.getString("recipeID");
+        ingredientID = result.getString("ingredientID");
+        isRequired = result.getBoolean("isRequired");
+
+        return new Lists(recipeID,ingredientID,isRequired);
+    }
+
     public static ArrayList<Ingredient> parseIngredients(ResultSet result) throws SQLException {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         while (result.next()) {
@@ -22,6 +45,7 @@ public class ResultSetParser {
         String name = result.getString("name");
         return new Ingredient(ingredientID, name);
     }
+
     public static ArrayList<User> parseUsers(ResultSet result) throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         while (result.next()) {
