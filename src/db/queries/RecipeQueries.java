@@ -178,31 +178,26 @@ public class RecipeQueries {
         return;
     }
 
-
-    //if we want to be able to delete a recipe, do not implement.
-    /**public static ArrayList<entities.Recipe> deleteRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
-        Recipe delete=null;
-        for (Recipe recipe : recipes) {
-            if (ID == recipe.getRecipeId()) {
-                delete = recipe;
-                recipes.remove(delete);
-            }
-        }
-        if (delete == null) {
-            System.out.println("Recipe with that ID does not exist");
-            return recipes;
-        }
+    public static void deleteRecipe(ServerDB server,Recipe recipe) {
 
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        try {
-            stat = conn.prepareStatement(
-                    "DELETE FROM RECIPE WHERE recipeID=?;");
-            stat.setString(1, ID);
 
+        try {
+
+            stat = conn.prepareStatement("DELETE FROM LISTS WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
             stat.executeUpdate();
-            return recipes;
+
+            stat = conn.prepareStatement("DELETE FROM ADDS WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
+            stat.executeUpdate();
+
+            stat = conn.prepareStatement("DELETE FROM RECIPE WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
+            stat.executeUpdate();
+            return;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -218,8 +213,7 @@ public class RecipeQueries {
             }
         }
         System.out.println("There was an error processing your request.");
-        return recipes;
-    }**/
+    }
 
     //method to update the rating of a recipe
     public static void updateRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes, int rating) {

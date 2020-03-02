@@ -103,10 +103,42 @@ public class ManageRecipe {
 
     public static void deleteRecipe(ServerDB server){
         Scanner scanner = new Scanner(System.in);
+        int increment = 5;
+        int start = 0;
+        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                    RecipeQueries.getRecipes(server, start, increment);
 
-        //TODO modifies the global recipes, not user dependent
-        System.out.println("TODO Delete Recipe");
-        //TODO
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                // figure out if we're on either the upper or lower bound and
+                // enable options accordingly
+                boolean hasPrevious = start > 0;
+                boolean hasNext = recipes.size() == increment;
+
+                // get customer request
+                action = PaginatedSelect.show(scanner, recipes, hasPrevious, hasNext);
+
+                // handle the request
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+
+                    RecipeQueries.deleteRecipe(server, action.getSelected());
+                    System.out.println("Deleted "+action.getSelected().getName());
+
+                } else { /* isback() handled as exit condition */ }
+
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack()); // back button exits the screen
+
     }
 
     public static void addRecipeGlobal(ServerDB server){
