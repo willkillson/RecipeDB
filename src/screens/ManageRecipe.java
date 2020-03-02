@@ -45,17 +45,17 @@ public class ManageRecipe {
                 // process options
                 switch (index) {
                     case (1)://Show All Recipes
-                        showAllRecipes(scanner, server, user);
+                        showAllRecipes(server);
                         break;
 
                     case (2):
                     {
-                        addRecipeGlobal(scanner,server);
+                        addRecipeGlobal(server);
                         break;
                     }
                     case (3)://TODO Delete Recipe
                     {
-                        deleteRecipe(scanner,server);
+                        deleteRecipe(server);
                         break;
                     }
                     default:
@@ -65,7 +65,8 @@ public class ManageRecipe {
         } while (!selected.isBack()); // exit
     }
 
-    public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
+    public static void showAllRecipes(ServerDB server) {
+        Scanner scanner = new Scanner(System.in);
         int increment = 5;
         int start = 0;
         SelectAction<Recipe> action;
@@ -97,29 +98,30 @@ public class ManageRecipe {
                 System.out.println(recipesR.error());
                 return;
             }
-            increment = increment*2;
         } while (!action.isBack()); // back button exits the screen
     }
 
-    public static void deleteRecipe(Scanner scanner, ServerDB server){
+    public static void deleteRecipe(ServerDB server){
+        Scanner scanner = new Scanner(System.in);
 
-            //TODO modifies the global recipes, not user dependent
-
-
+        //TODO modifies the global recipes, not user dependent
         System.out.println("TODO Delete Recipe");
         //TODO
     }
 
-    public static void addRecipeGlobal(Scanner scanner, ServerDB server){
-            System.out.println("Enter a RecipeID for the recipe" );
-            String recipeID = scanner.nextLine();
-            System.out.println("Enter a name for the recipe" );
-            String name = scanner.nextLine();
-            System.out.println("Enter a URL for the recipe" );
-            String URL = scanner.nextLine();
-            Recipe recipe = new Recipe(recipeID,name,null,URL,0,null);
+    public static void addRecipeGlobal(ServerDB server){
 
-            RecipeQueries.addRecipe(server,recipe);
-            return;
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter a RecipeID for the recipe" );
+        String recipeID = scanner.nextLine();
+        System.out.println("Enter a name for the recipe" );
+        String name = scanner.nextLine();
+        System.out.println("Enter a URL for the recipe" );
+        String URL = scanner.nextLine();
+        Recipe recipe = new Recipe(recipeID,name,null,URL,0,null);
+
+        RecipeQueries.addRecipe(server,recipe);
+        return;
     }
 }
