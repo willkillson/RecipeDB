@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
 import util.Result;
+import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
 
@@ -142,10 +143,52 @@ public class ManageCart {
 
             We should list all the recipes, before asking which recipe they would like to add.
 
+            -show recipes
+            -add recipe
+
          */
-        System.out.println("TODO Add Recipe To Cart");
-        //TODO
+
+        final int increment = 5;
+        int start = 0;
+        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR = RecipeQueries.getRecipes(server, start, increment);
+
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                // figure out if we're on either the upper or lower bound and
+                // enable options accordingly
+                boolean hasPrevious = start > 0;
+                boolean hasNext = recipes.size() == increment;
+
+                // get customer request
+                action = PaginatedSelect.show(scanner, recipes, hasPrevious, hasNext);
+
+                // handle the request
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+
+                    //TODO
+                    RecipeQueries.addRecipeCart(server,user,action.getSelected());
+
+                    System.out.println("Adding recipe: "+action.getSelected().getName());
+
+                } else { /* isback() handled as exit condition */ }
+
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack()); // back button exits the screen
+
+
     }
+
+
 
 
 }
