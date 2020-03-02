@@ -7,8 +7,11 @@ import java.util.Scanner;
 import screens.Login;
 import screens.ManageCart;
 import screens.ManageCupboard;
+import screens.ManageQueries;
 import screens.ManageRecipe;
 import util.Result;
+import util.ui.BackSelect;
+import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
 
@@ -66,10 +69,10 @@ public class Main {
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Logout");
-        menuOptions.add("Manage Cupboard");
-        menuOptions.add("Manage Cart");
+        menuOptions.add("Cupboard");
+        menuOptions.add("Cart");
         menuOptions.add("Manage recipes");
+        menuOptions.add("Manage queries");
     }
 
     public void run() {
@@ -80,21 +83,23 @@ public class Main {
             SelectAction<String> selected = null;
             do {
                 // the zero is the index of the exit in menuOptions
-                selected = SimpleSelect.show(scanner, menuOptions, 0);
+                selected = BackSelect.show(scanner, menuOptions);
                 if (selected.isSelected()) { // valid selection / not back
                     // get selected index
                     String selectionText = selected.getSelected();
                     int index = menuOptions.indexOf(selectionText);
                     switch (index) {
-                        case (1):
+                        case (0):
                             ManageCupboard.view(scanner, server, user);
                             break;
-                        case (2):
+                        case (1):
                             ManageCart.view(scanner, server, user);
                             break;
-                        case (3):
+                        case (2):
                             ManageRecipe.view(scanner, server, user);
                             break;
+                        case (3):
+                            ManageQueries.view(scanner, server, user);
                         default:
                             System.out.println("ERROR: That selection has not been implemented.");
                     }

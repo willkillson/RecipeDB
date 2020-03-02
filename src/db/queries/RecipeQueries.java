@@ -1,6 +1,7 @@
 package db.queries;
 
 import db.ServerDB;
+import entities.Lists;
 import entities.Recipe;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,16 +36,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -91,16 +83,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -123,7 +106,7 @@ public class RecipeQueries {
 
 
 
-    public static void addRecipe(ServerDB server, Recipe recipe) {
+    public static void addRecipe(ServerDB server, Recipe recipe, ArrayList<Lists> lists) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
@@ -135,9 +118,17 @@ public class RecipeQueries {
             stat.setString(1, recipe.getRecipeId());
             stat.setString(2, recipe.getName());
             stat.setString(3, recipe.getUrl());
-
-
             stat.executeUpdate();
+
+            for(int i = 0;i< lists.size();i++){
+                stat = conn.prepareStatement(
+                        "INSERT INTO LISTS VALUES(?, ?, ?)");
+                stat.setString(1, recipe.getRecipeId());
+                stat.setString(2, lists.get(i).ingredientID);
+                stat.setBoolean(3, lists.get(i).isRequired);
+                stat.executeUpdate();
+            }
+
             System.out.println("Recipe: " + recipe.getName() + " inserted into the database");
             return;
         } catch (SQLException e) {
@@ -164,14 +155,15 @@ public class RecipeQueries {
         PreparedStatement stat = null;
         ResultSet result = null;
 
+
+        //TODO if the recipe is already in ADDS (because we have already reveiewed it once before) then we need
+        //to an update not an insert
         try {
 
-            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, ?, ?, ?)");
+            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
             stat.setString(1, user.getUserId());
             stat.setString(2, recipe.getRecipeId());
-            stat.setDate(3, (java.sql.Date) recipe.getLastCooked());
-            stat.setInt(4, recipe.getTimesCooked());
-            stat.setDouble(5, recipe.getRating().get());
+
             stat.executeUpdate();
             System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
 
@@ -196,31 +188,26 @@ public class RecipeQueries {
         return;
     }
 
-
-    //if we want to be able to delete a recipe, do not implement.
-    /**public static ArrayList<entities.Recipe> deleteRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
-        Recipe delete=null;
-        for (Recipe recipe : recipes) {
-            if (ID == recipe.getRecipeId()) {
-                delete = recipe;
-                recipes.remove(delete);
-            }
-        }
-        if (delete == null) {
-            System.out.println("Recipe with that ID does not exist");
-            return recipes;
-        }
+    public static void deleteRecipe(ServerDB server,Recipe recipe) {
 
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        try {
-            stat = conn.prepareStatement(
-                    "DELETE FROM RECIPE WHERE recipeID=?;");
-            stat.setString(1, ID);
 
+        try {
+
+            stat = conn.prepareStatement("DELETE FROM LISTS WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
             stat.executeUpdate();
-            return recipes;
+
+            stat = conn.prepareStatement("DELETE FROM ADDS WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
+            stat.executeUpdate();
+
+            stat = conn.prepareStatement("DELETE FROM RECIPE WHERE recipeID=?;");
+            stat.setString(1, recipe.getRecipeId());
+            stat.executeUpdate();
+            return;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -236,8 +223,7 @@ public class RecipeQueries {
             }
         }
         System.out.println("There was an error processing your request.");
-        return recipes;
-    }**/
+    }
 
     //method to update the rating of a recipe
     public static void updateRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes, int rating) {
@@ -262,8 +248,10 @@ public class RecipeQueries {
 
             stat.setInt(1, rating);
             stat.setString(2, ID);
-
             stat.executeUpdate();
+
+
+
             return;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -303,16 +291,7 @@ public class RecipeQueries {
             String query = stat.toString();
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -349,16 +328,7 @@ public class RecipeQueries {
 
             result = stat.executeQuery();
 
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
+            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
             return Result.success(recipes);
         } catch (SQLException e) {
             e.printStackTrace();

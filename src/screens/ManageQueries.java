@@ -6,6 +6,7 @@ import entities.Recipe;
 import entities.User;
 import util.Helpers;
 import util.Result;
+import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
@@ -21,7 +22,6 @@ public class ManageQueries {
 
         static {
             menuOptions = new ArrayList<>();
-            menuOptions.add("Go back");
             menuOptions.add("Rating Query");
             menuOptions.add("Times Cooked Query");
         }
@@ -30,17 +30,17 @@ public class ManageQueries {
             SelectAction<String> selected = null;
             do {
                 // display menu
-                selected = SimpleSelect.show(scanner, menuOptions, 0);
+                selected = BackSelect.show(scanner, menuOptions);
                 if (selected.isSelected()) { // valid selection
                     // get selected index
                     String selectionText = selected.getSelected();
                     int index = menuOptions.indexOf(selectionText);
                     // process options
                     switch (index) {
-                        case (1):
+                        case (0):
                             searchRating(scanner, server, user);
                             break;
-                        case (2):
+                        case (1):
                             searchTimesCooked(scanner, server, user);
                             break;
                         default:
