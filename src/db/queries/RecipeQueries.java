@@ -121,7 +121,7 @@ public class RecipeQueries {
 
 
 
-    public static void addRecipe(ServerDB server, String ID, ArrayList<entities.Recipe> recipes) {
+    public static void addRecipe(ServerDB server, Recipe recipe) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
@@ -179,6 +179,10 @@ public class RecipeQueries {
         }
         System.out.println("There was an error processing your request.");
         return;
+    }
+
+    public static void addRecipeCart(){
+
     }
 
 

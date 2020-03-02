@@ -4,8 +4,15 @@ import db.ServerDB;
 import db.queries.RecipeQueries;
 import entities.Recipe;
 import entities.User;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import util.Helpers;
 import util.Result;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
@@ -24,6 +31,7 @@ public class ManageRecipe {
         menuOptions.add("Show Stored Recipes");
         menuOptions.add("Rate Recipe");
         menuOptions.add("Add Recipe To Cart");
+        menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
     }
 
@@ -41,24 +49,29 @@ public class ManageRecipe {
                     case (1):
                         showAllRecipes(scanner, server, user);
                         break;
-                    case (2):
+                    case (2)://TODO
                     {
-                        //TODO
+
                         showStoredRecipes();
                         break;
                     }
                     case (3):
                         rateRecipe(scanner, server, user);
-                    case (4):
+                    case (4)://TODO
                     {
-                        //TODO
+
                         addRecipeCart();
                         break;
                     }
-                    case (5):
+                    case (5)://TODO
                     {
-                        //TODO
+
                         deleteRecipeCart();
+                        break;
+                    }
+                    case (6):
+                    {
+                        addRecipe(scanner,server);
                         break;
                     }
                     default:
@@ -93,7 +106,7 @@ public class ManageRecipe {
                 } else if (action.isPrevious()) {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
-                    showRecipe(action.getSelected());
+                    Helpers.showRecipe(action.getSelected());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure
@@ -102,18 +115,6 @@ public class ManageRecipe {
             }
             increment = increment*2;
         } while (!action.isBack()); // back button exits the screen
-    }
-
-    /**
-     * prints individual recipe info. This should be expanded to include an option for adding the recipe
-     * to the user list
-     *
-     * @param recipe
-     */
-    public static void showRecipe(Recipe recipe) {
-        System.out.println("Recipe: " + recipe.getName());
-        System.out.println("\tUrl: " + recipe.getUrl());
-        System.out.println("\tRating: " + recipe.getRating().get());
     }
 
     public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
@@ -129,7 +130,7 @@ public class ManageRecipe {
                 for (Recipe recipe : recipes) {
                     System.out.println(i);
                     i++;
-                    showRecipe(recipe);
+                    Helpers.showRecipe(recipe);
                 }
                 Scanner in = new Scanner(System.in);
                 System.out.println("Which recipe would you like to update the rating for?: ");
@@ -178,24 +179,19 @@ public class ManageRecipe {
         //TODO
     }
 
-    /**public static void addRecipe(Scanner scanner, ServerDB server, User user) {
-     SelectAction<Recipe> action;
-     do {
-     //Get records
-     Result<ArrayList<Recipe>> recipesR =
-     RecipeQueries.getRecipes(server, 0, 100);
+    public static void addRecipe(Scanner scanner,ServerDB server){
 
-     if (recipesR.isSuccess()) { // got records
-     ArrayList<Recipe> recipes = recipesR.value();
-     Scanner in = new Scanner(System.in);
-     System.out.println("Which a new recipeID for the recipe: ");
-     String ID = in.nextLine();
-     RecipeQueries.addRecipe(server, ID, recipes);
-     return;
-     } else { // system failure
-     System.out.println(recipesR.error());
-     return;
-     }
-     } while (!action.isBack());
-     }**/
+            Scanner in = new Scanner(System.in);
+            System.out.println("Enter a RecipeID for the recipe" );
+            String recipeID = in.nextLine();
+            System.out.println("Enter a name for the recipe" );
+            String name = in.nextLine();
+            System.out.println("Enter a URL for the recipe" );
+            String URL = in.nextLine();
+            Recipe recipe = new Recipe(recipeID,name,null,URL,0,null);
+
+            RecipeQueries.addRecipe(server,recipe);
+            return;
+    }
+
 }

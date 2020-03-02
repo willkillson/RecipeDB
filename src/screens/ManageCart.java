@@ -198,7 +198,7 @@ public class ManageCart {
                 if (action.isNext()) {
                     start += increment;
                 } else if (action.isPrevious()) {
-                    start = Math.max(0, start - 10);
+                    start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
                     //TODO
