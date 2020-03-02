@@ -156,16 +156,27 @@ public class RecipeQueries {
         ResultSet result = null;
 
 
-        //TODO if the recipe is already in ADDS (because we have already reveiewed it once before) then we need
+        //if the recipe is already in ADDS (because we have already reveiewed it once before) then we need
         //to an update not an insert
         try {
+            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
+            if(maybeRecipes.isSuccess()){
+                ArrayList<Recipe> recipes = maybeRecipes.value();
+                if(recipes.contains(recipe)){
+                    //then we need to perform an update
+                    System.out.println("Recipe is already added.");
+                }
+                else{
+                    //we need to perform an insertion
+                    stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
+                    stat.setString(1, user.getUserId());
+                    stat.setString(2, recipe.getRecipeId());
 
-            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
-            stat.setString(1, user.getUserId());
-            stat.setString(2, recipe.getRecipeId());
+                    stat.executeUpdate();
+                    System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
+                }
+            }
 
-            stat.executeUpdate();
-            System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
 
         } catch (SQLException e) {
             e.printStackTrace();
