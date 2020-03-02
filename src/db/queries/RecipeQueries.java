@@ -119,49 +119,22 @@ public class RecipeQueries {
 
     }
 
-
-
     public static void addRecipe(ServerDB server, Recipe recipe) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        for (Recipe recipe : recipes) {
-            if (ID == recipe.getRecipeId()) {
-                System.out.println("Recipe with this ID already exists");
-                return;
-            }
-        }
+
         try {
-            Scanner in = new Scanner(System.in);
-            System.out.println("Enter a RecipeID for the recipe" );
-            String recipeID = in.nextLine();
-            System.out.println("Enter a name for the recipe" );
-            String name = in.nextLine();
-            System.out.println("Enter a URL for the recipe" );
-            String URL = in.nextLine();
+
             stat = conn.prepareStatement(
                     "INSERT INTO RECIPE VALUES(?, ?, ?)");
-            stat.setString(1, recipeID);
-            stat.setString(2, name);
-            stat.setString(3, URL);
+            stat.setString(1, recipe.getRecipeId());
+            stat.setString(2, recipe.getName());
+            stat.setString(3, recipe.getUrl());
             stat.executeUpdate();
-            System.out.println("Enter the last cooked date for the recipe ; dd/mm/yyyy" );
-            String date = in.nextLine();
-            java.util.Date myDate = new java.util.Date(date);
-            java.sql.Date lastCooked = new java.sql.Date(myDate.getTime());
 
-            System.out.println("Enter the number of times this recipe was cooked" );
-            int timesCooked = in.nextInt();
-            System.out.println("Enter a rating for the recipe" );
-            int rating = in.nextInt();
-            stat = conn.prepareStatement(
-                    "INSERT INTO ADDS VALUES(null, ?, ?, ?, ?)");
-            stat.setString(1, recipeID);
-            stat.setDate(2, lastCooked);
-            stat.setInt(3, timesCooked);
-            stat.setInt(4, rating);
             stat.executeUpdate();
-            System.out.println("Recipe: " + recipeID + " inserted into the database");
+            System.out.println("Recipe: " + recipe.getName() + " inserted into the database");
             return;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -181,8 +154,8 @@ public class RecipeQueries {
         return;
     }
 
-    public static void addRecipeCart(){
-
+    public static void addRecipeCart(ServerDB server,User user, Recipe recipe ){
+        //TODO
     }
 
 
