@@ -31,7 +31,6 @@ public class ManageRecipe {
         menuOptions.add("Show All Recipes");
         menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
-        menuOptions.add("Add Recipe");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -102,39 +101,6 @@ public class ManageRecipe {
         } while (!action.isBack()); // back button exits the screen
     }
 
-    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
-        SelectAction<Recipe> action;
-        do {
-            //Get records
-            Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, 0, 100);
-
-            if (recipesR.isSuccess()) { // got records
-                ArrayList<Recipe> recipes = recipesR.value();
-                int i =0;
-                for (Recipe recipe : recipes) {
-                    System.out.println(i);
-                    i++;
-                    Helpers.showRecipe(recipe);
-                }
-                Scanner in = new Scanner(System.in);
-                System.out.println("Which recipe would you like to update the rating for?: ");
-                int recipe = in.nextInt();
-                System.out.println("What would you like to update the rating to?: ");
-                int rating = in.nextInt();
-                Recipe update = recipes.get(recipe);
-                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
-                return;
-            } else { // system failure
-                System.out.println(recipesR.error());
-                return;
-            }
-        } while (!action.isBack());
-    }
-
-
-
-
     public static void deleteRecipe(Scanner scanner, ServerDB server){
 
             //TODO modifies the global recipes, not user dependent
@@ -143,7 +109,6 @@ public class ManageRecipe {
         System.out.println("TODO Delete Recipe");
         //TODO
     }
-
 
     public static void addRecipeGlobal(Scanner scanner, ServerDB server){
             System.out.println("Enter a RecipeID for the recipe" );
