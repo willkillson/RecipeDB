@@ -12,4 +12,11 @@ public class SimpleSelect {
             ? SelectAction.Back() : action;
     }
 
+    public static <T> SelectAction<T> show(Scanner scanner, ArrayList<T> items, String prompt, int backIndex) {
+        SelectAction<T> action = Select.show(scanner, items, prompt,
+            false, false, false);
+        return (items.indexOf(action.getSelected()) == backIndex)
+            ? SelectAction.Back() : action;
+    }
+
 }
