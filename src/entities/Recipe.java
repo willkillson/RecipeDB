@@ -28,9 +28,7 @@ public class Recipe {
         return name;
     }
 
-    public Optional<Double> getRating() {
-        return rating;
-    }
+    public Optional<Double> getRating() { return rating; }
 
     public void setRating(double rating) { this.rating = Optional.of(rating); }
 

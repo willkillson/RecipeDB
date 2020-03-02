@@ -24,6 +24,12 @@ public class Login {
             String password = "03D64A6A";//automatic login
             //*/
 
+            //TODO      We will be adding a select user feature here, that will allow us to
+            //TODO      select a user, and so everything after this will modify the user we
+            //TODO      choose.
+
+            //TODO      There will not be a login feature.
+
             // Auth user
             Result<User> maybeUser = verifyUser(server, name, password);
 
