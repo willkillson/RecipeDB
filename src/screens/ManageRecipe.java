@@ -46,32 +46,31 @@ public class ManageRecipe {
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1):
+                    case (1)://Show All Recipes
                         showAllRecipes(scanner, server, user);
                         break;
-                    case (2)://TODO
+                    case (2)://TODO Show Stored Recipes
                     {
 
                         showStoredRecipes();
                         break;
                     }
-                    case (3):
+                    case (3)://Rate Recipe
                         rateRecipe(scanner, server, user);
-                    case (4)://TODO
+                    case (4)://TODO Add Recipe To Cart
                     {
 
-                        addRecipeCart();
+                        addRecipeCart(scanner,server,user);
                         break;
                     }
-                    case (5)://TODO
+                    case (5):
                     {
-
+                        addRecipeGlobal(scanner,server);
+                        break;
+                    }
+                    case (6)://TODO Delete Recipe
+                    {
                         deleteRecipeCart();
-                        break;
-                    }
-                    case (6):
-                    {
-                        addRecipe(scanner,server);
                         break;
                     }
                     default:
@@ -157,7 +156,7 @@ public class ManageRecipe {
         //TODO
     }
 
-    public static void addRecipeCart(){
+    public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
         /*
 
             Adds a recipe by ID from a list of recipes.
@@ -179,15 +178,15 @@ public class ManageRecipe {
         //TODO
     }
 
-    public static void addRecipe(Scanner scanner,ServerDB server){
+    public static void addRecipeGlobal(Scanner scanner,ServerDB server){
 
-            Scanner in = new Scanner(System.in);
+
             System.out.println("Enter a RecipeID for the recipe" );
-            String recipeID = in.nextLine();
+            String recipeID = scanner.nextLine();
             System.out.println("Enter a name for the recipe" );
-            String name = in.nextLine();
+            String name = scanner.nextLine();
             System.out.println("Enter a URL for the recipe" );
-            String URL = in.nextLine();
+            String URL = scanner.nextLine();
             Recipe recipe = new Recipe(recipeID,name,null,URL,0,null);
 
             RecipeQueries.addRecipe(server,recipe);
