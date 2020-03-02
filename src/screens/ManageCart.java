@@ -201,6 +201,12 @@ public class ManageCart {
     public static void buildShoppingCart(){
         //TODO This function should populate the CONTAINS relationship, see Deliverable 2
 
+        //TODO 1. remove everything that is in our current cart
+
+        //TODO 2. get all the ingredients that we don't have in our cupboard
+
+        //TODO 3. populate our cart by filling our CONTAINS relation with ingredients from 2.
+
         System.out.println("buildShoppingCart() TODO");
     }
 
