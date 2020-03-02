@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
 import util.Result;
+import util.ui.BackSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
 
@@ -27,32 +28,29 @@ public class ManageCupboard {
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Go back");
         menuOptions.add("Show Cupboard");
         menuOptions.add("Add Ingredient");
         menuOptions.add("Delete Ingredient");
-
-
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
             // display menu
-            selected = SimpleSelect.show(scanner, menuOptions, 0);
+            selected = BackSelect.show(scanner, menuOptions);
             if (selected.isSelected()) { // valid selection
                 // get selected index
                 String selectionText = selected.getSelected();
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1):
+                    case (0):
                         showCupboard(server, user);
                         break;
-                    case(2):
+                    case(1):
                     	addIngredient(scanner, server, user);
                     	break;
-                    case(3):
+                    case(2):
                     	removeIngredient(scanner, server, user);
                     	break;
                     default:

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
 import util.Result;
+import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
@@ -27,7 +28,6 @@ public class ManageCart {
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Go back");
         menuOptions.add("Show Cart");
         menuOptions.add("Show Current Recipes");
         menuOptions.add("Rate Recipe");
@@ -38,31 +38,31 @@ public class ManageCart {
         SelectAction<String> selected = null;
         do {
             // display menu
-            selected = SimpleSelect.show(scanner, menuOptions, 0);
+            selected = BackSelect.show(scanner, menuOptions);
             if (selected.isSelected()) { // valid selection
                 // get selected index
                 String selectionText = selected.getSelected();
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1)://showCart
+                    case (0)://showCart
                     {
                         showCart(server, user);
                         break;
                     }
-                    case (2)://showStoredRecipes
+                    case (1)://showStoredRecipes
                     {
                         //TODO
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (3)://rateRecipe
+                    case (2)://rateRecipe
                     {
                         //TODO
                         rateRecipe(scanner, server, user);
                         break;
                     }
-                    case (4)://addRecipeCart
+                    case (3)://addRecipeCart
                     {
                         //TODO
                         addRecipeCart(scanner, server, user);

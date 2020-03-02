@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 import util.Helpers;
 import util.Result;
+import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 import util.ui.SimpleSelect;
@@ -27,7 +28,6 @@ public class ManageRecipe {
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Go back");
         menuOptions.add("Show All Recipes");
         menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
@@ -37,23 +37,23 @@ public class ManageRecipe {
         SelectAction<String> selected = null;
         do {
             // display menu
-            selected = SimpleSelect.show(scanner, menuOptions, 0);
+            selected = BackSelect.show(scanner, menuOptions);
             if (selected.isSelected()) { // valid selection
                 // get selected index
                 String selectionText = selected.getSelected();
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1)://Show All Recipes
+                    case (0)://Show All Recipes
                         showAllRecipes(server);
                         break;
 
-                    case (2):
+                    case (1):
                     {
                         addRecipeGlobal(server);
                         break;
                     }
-                    case (3)://TODO Delete Recipe
+                    case (2)://TODO Delete Recipe
                     {
                         deleteRecipe(server);
                         break;
