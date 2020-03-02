@@ -5,6 +5,7 @@ import static db.queries.CartQueries.getCart;
 
 import db.ServerDB;
 import db.queries.CartQueries;
+import db.queries.ContainsQueries;
 import db.queries.ListsQueries;
 import db.queries.RecipeQueries;
 import entities.Cart;
@@ -87,7 +88,8 @@ public class ManageCart {
 
     public static void showCart(ServerDB server, User user) {
 
-
+        //builds our cart
+        buildShoppingCart(server,user);
 
 
         Result<Cart> maybeCart = getCart(server, user);
@@ -207,27 +209,25 @@ public class ManageCart {
     }
 
     public static void buildShoppingCart(ServerDB server, User user){
-        //TODO This function should populate the CONTAINS relationship, see Deliverable 2
+        //This function should populate the CONTAINS relationship, see Deliverable 2
 
         //1. remove everything that is in our current contains relationship
         CartQueries.clearContainsRelation(server,user);
 
-        //TODO 2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
+        //2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
         ArrayList<Recipe> recipes = RecipeQueries.getAddsRecipes(server, user).value();
 
         ArrayList<String> recipeIDs = new ArrayList<>();
         for(int i = 0;i< recipes.size();i++){
             recipeIDs.add(recipes.get(i).getRecipeId());
         }
+
+        //now we have our lists
         ArrayList<ArrayList<Lists>> lists = ListsQueries.getLists(server,recipeIDs);
-        System.out.println("hello world!");
+
+        ContainsQueries.updateContains(server,user,lists);
 
 
-        //TODO 3. populate our cart by filling our CONTAINS relation with ingredients from 2.
-
-
-
-        System.out.println("buildShoppingCart() TODO");
     }
 
 
