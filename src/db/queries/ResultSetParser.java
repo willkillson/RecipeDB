@@ -40,6 +40,7 @@ public class ResultSetParser {
         }
         return ingredients;
     }
+
     public static Ingredient parseIngredient(ResultSet result) throws SQLException {
         String ingredientID = result.getString("ingredientID");
         String name = result.getString("name");
@@ -53,6 +54,7 @@ public class ResultSetParser {
         }
         return users;
     }
+
     public static User parseUser(ResultSet result) throws SQLException {
         String userId = result.getString("userID");
         String email = result.getString("cupboardID");
