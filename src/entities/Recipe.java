@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Recipe {
@@ -47,5 +48,20 @@ public class Recipe {
 
     public Date getLastCooked() {
         return lastCooked;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        return Objects.equals(recipeId, recipe.recipeId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(recipeId);
     }
 }
