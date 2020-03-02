@@ -70,7 +70,7 @@ public class ManageRecipe {
     }
 
     public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
-        final int increment = 5;
+        int increment = 5;
         int start = 0;
         SelectAction<Recipe> action;
         do {
@@ -92,7 +92,7 @@ public class ManageRecipe {
                 if (action.isNext()) {
                     start += increment;
                 } else if (action.isPrevious()) {
-                    start = Math.max(0, start - 10);
+                    start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
                     showRecipe(action.getSelected());
                 } else { /* isback() handled as exit condition */ }
@@ -101,6 +101,7 @@ public class ManageRecipe {
                 System.out.println(recipesR.error());
                 return;
             }
+            increment = increment*2;
         } while (!action.isBack()); // back button exits the screen
     }
 
