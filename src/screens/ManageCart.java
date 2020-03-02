@@ -5,8 +5,10 @@ import static db.queries.CartQueries.getCart;
 
 import db.ServerDB;
 import db.queries.CartQueries;
+import db.queries.ListsQueries;
 import db.queries.RecipeQueries;
 import entities.Cart;
+import entities.Lists;
 import entities.Recipe;
 import entities.User;
 
@@ -72,7 +74,7 @@ public class ManageCart {
                     }
                     case (4)://TODO Build cart
                     {
-                        buildShoppingCart();
+                        buildShoppingCart(server,user);
                         break;
                     }
 
@@ -210,7 +212,16 @@ public class ManageCart {
         //1. remove everything that is in our current contains relationship
         CartQueries.clearContainsRelation(server,user);
 
-        //TODO 2. get all the ingredients that we don't have in our cupboard
+        //TODO 2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
+        ArrayList<Recipe> recipes = RecipeQueries.getAddsRecipes(server, user).value();
+
+        ArrayList<String> recipeIDs = new ArrayList<>();
+        for(int i = 0;i< recipes.size();i++){
+            recipeIDs.add(recipes.get(i).getRecipeId());
+        }
+        ArrayList<ArrayList<Lists>> lists = ListsQueries.getLists(server,recipeIDs);
+        System.out.println("hello world!");
+
 
         //TODO 3. populate our cart by filling our CONTAINS relation with ingredients from 2.
 
