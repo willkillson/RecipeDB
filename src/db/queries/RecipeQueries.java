@@ -119,6 +119,8 @@ public class RecipeQueries {
 
     }
 
+
+
     public static void addRecipe(ServerDB server, Recipe recipe) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
@@ -131,7 +133,7 @@ public class RecipeQueries {
             stat.setString(1, recipe.getRecipeId());
             stat.setString(2, recipe.getName());
             stat.setString(3, recipe.getUrl());
-            stat.executeUpdate();
+
 
             stat.executeUpdate();
             System.out.println("Recipe: " + recipe.getName() + " inserted into the database");
@@ -155,7 +157,41 @@ public class RecipeQueries {
     }
 
     public static void addRecipeCart(ServerDB server,User user, Recipe recipe ){
-        //TODO
+
+        Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        ResultSet result = null;
+
+        try {
+
+            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, ?, ?, ?)");
+            stat.setString(1, user.getUserId());
+            stat.setString(2, recipe.getRecipeId());
+            stat.setDate(3, (java.sql.Date) recipe.getLastCooked());
+            stat.setInt(4, recipe.getTimesCooked());
+            stat.setDouble(5, recipe.getRating().get());
+            stat.executeUpdate();
+            System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+
+
+
+
+        return;
     }
 
 

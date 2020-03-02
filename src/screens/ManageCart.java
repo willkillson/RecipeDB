@@ -202,7 +202,7 @@ public class ManageCart {
                 } else if (action.isSelected()) {
 
                     //TODO
-                    RecipeQueries.addRecipe(server,action.getSelected().getRecipeId(),recipes);
+                    RecipeQueries.addRecipeCart(server,user,action.getSelected());
 
                     System.out.println("Adding recipe: "+action.getSelected().getName());
 

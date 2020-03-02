@@ -4,6 +4,7 @@ import db.ServerDB;
 import db.queries.RecipeQueries;
 import entities.Recipe;
 import entities.User;
+import util.Helpers;
 import util.Result;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
@@ -78,7 +79,7 @@ public class ManageQueries {
                     } else if (action.isPrevious()) {
                         start = Math.max(0, start - 10);
                     } else if (action.isSelected()) {
-                        ManageRecipe.showRecipe(action.getSelected());
+                        Helpers.showRecipe(action.getSelected());
                     } else { /* isback() handled as exit condition */ }
 
                 } else { // system failure
@@ -117,7 +118,7 @@ public class ManageQueries {
                 } else if (action.isPrevious()) {
                     start = Math.max(0, start - 10);
                 } else if (action.isSelected()) {
-                    ManageRecipe.showRecipe(action.getSelected());
+                    Helpers.showRecipe(action.getSelected());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure
