@@ -89,7 +89,7 @@ public class ManageQueries {
             } while (!action.isBack()); // back button exits the screen
         }
 
-    public static void searchTimesCooked(Scanner scanner, ServerDB server, User user) {
+        public static void searchTimesCooked(Scanner scanner, ServerDB server, User user) {
         final int increment = 10;
         int start = 0;
         SelectAction<Recipe> action;
