@@ -69,7 +69,7 @@ public class RecipeQueries {
      *
      * @param server
      * @param usr
-     * @return
+     * @return all the recipes that the user hasn't rated on.
      */
     public static Result<ArrayList<entities.Recipe>> getAddsRecipes(ServerDB server, User usr){
 
@@ -78,12 +78,13 @@ public class RecipeQueries {
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                    "select RECIPE.recipeID, RECIPE.name, RECIPE.url, \n" +
-                            "ADDS.rating, ADDS.timesCooked, ADDS.lastCooked, ADDS.userID\n" +
-                            "from adds, recipe\n" +
-                            "where adds.recipeID = recipe.recipeID\n" +
-                            "AND ADDS.rating IS NULL " +
-                            "AND adds.userID=?;");
+                    "select RECIPE.recipeID, RECIPE.name, ADDS.rating, \n" +
+                            "RECIPE.url, ADDS.timesCooked, ADDS.lastCooked\n" +
+                            "from recipe,ADDS\n" +
+                            "where ADDS.rating IS NULL\n" +
+                            "AND RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
+                            "From ADDS\n" +
+                            "where ADDS.userID = ?);");
 
             stat.setString(1, usr.getUserId());
 
@@ -283,18 +284,18 @@ public class RecipeQueries {
     }
 
     public static Result<ArrayList<entities.Recipe>> getRecipesRating(
-            ServerDB server, int start, int size, double rate) {
+        ServerDB server, int start, int size, double rate) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                    "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                        "RECIPE.URL as url, Avg(ADDS.rating) as rating, Sum(ADDS.timesCooked) as timesCooked, " +
-                        "Max(ADDS.lastCooked) as lastCooked FROM RECIPE, ADDS " +
-                        "WHERE ADDS.recipeID=RECIPE.recipeID AND rating > ? " +
-                        "GROUP BY RECIPE.recipeID,  RECIPE.name,  RECIPE.url" +
-                        " LIMIT ?, ?;");
+                "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
+                    "RECIPE.URL as url, Avg(ADDS.rating) as rating, Sum(ADDS.timesCooked) as timesCooked, " +
+                    "Max(ADDS.lastCooked) as lastCooked FROM RECIPE, ADDS " +
+                    "WHERE ADDS.recipeID=RECIPE.recipeID AND rating > ? " +
+                    "GROUP BY RECIPE.recipeID,  RECIPE.name,  RECIPE.url" +
+                    " LIMIT ?, ?;");
 
             stat.setDouble(1, rate);
             stat.setInt(2, start);
@@ -328,19 +329,19 @@ public class RecipeQueries {
             }
         }
         return Result.failure("There was an error processing your request. " +
-                "Please contact software developer with the previous output");
+            "Please contact software developer with the previous output");
     }
 
     public static Result<ArrayList<entities.Recipe>> getRecipesCooked(
-            ServerDB server, int start, int size, double rate) {
+        ServerDB server, int start, int size, double rate) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                    "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                            "RECIPE.URL as url, Avg(ADDS.rating) as rating, ADDS.timesCooked, ADDS.lastCooked FROM RECIPE, ADDS " +
-                            "WHERE ADDS.recipeID=RECIPE.recipeID AND ADDS.timesCooked > ? GROUP BY RECIPE.recipeID LIMIT ?, ?;");
+                "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
+                    "RECIPE.URL as url, Avg(ADDS.rating) as rating, ADDS.timesCooked, ADDS.lastCooked FROM RECIPE, ADDS " +
+                    "WHERE ADDS.recipeID=RECIPE.recipeID AND ADDS.timesCooked > ? GROUP BY RECIPE.recipeID LIMIT ?, ?;");
 
             stat.setDouble(1, rate);
             stat.setInt(2, start);
@@ -374,6 +375,6 @@ public class RecipeQueries {
             }
         }
         return Result.failure("There was an error processing your request. " +
-                "Please contact software developer with the previous output");
+            "Please contact software developer with the previous output");
     }
 }

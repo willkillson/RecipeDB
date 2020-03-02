@@ -20,6 +20,7 @@ import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with recipes.
+ * Note that these are not user-specific.
  */
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;
@@ -33,6 +34,7 @@ public class ManageRecipe {
         menuOptions.add("Add Recipe To Cart");
         menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
+        menuOptions.add("Add Recipe");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -51,7 +53,6 @@ public class ManageRecipe {
                         break;
                     case (2)://TODO Show Stored Recipes
                     {
-
                         showStoredRecipes();
                         break;
                     }
@@ -70,7 +71,7 @@ public class ManageRecipe {
                     }
                     case (6)://TODO Delete Recipe
                     {
-                        deleteRecipeCart();
+                        //deleteRecipeCart();
                         break;
                     }
                     default:
@@ -146,41 +147,59 @@ public class ManageRecipe {
         } while (!action.isBack());
     }
 
-    public static void showStoredRecipes(){
-        /*
-
-            Lists all the stored recipes that the user has added.
-
-         */
-        System.out.println("TODO Show Stored Recipes");
-        //TODO
+    public static void showStoredRecipes(){}
+    /**
+     * prints individual recipe info. This should be expanded to include an option for adding the recipe
+     * to the user list
+     *
+     * @param recipe
+     */
+    public static void showRecipe(Recipe recipe) {
+        System.out.println("Recipe: " + recipe.getName());
+        System.out.println("\tUrl: " + recipe.getUrl());
+        System.out.println("\tRating: " + recipe.getRating().get());
     }
 
-    public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
+    public static void deleteRecipe(Scanner scanner, ServerDB server){
         /*
 
-            Adds a recipe by ID from a list of recipes.
-
-            We should list all the recipes, before asking which recipe they would like to add.
-
-         */
-        System.out.println("TODO Add Recipe To Cart");
-        //TODO
-    }
-
-    public static void deleteRecipeCart(){
-        /*
-
-            Removes a recipe from a user.
+            //TODO modifies the global recipes, not user dependent
 
          */
         System.out.println("TODO Delete Recipe");
         //TODO
     }
 
-    public static void addRecipeGlobal(Scanner scanner,ServerDB server){
+    public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
 
+        /*
 
+            //TODO modifies the global recipes, not user dependent
+
+         */
+        System.out.println("TODO addRecipe");
+
+/*        SelectAction<Recipe> action;
+        do {
+            //Get records
+            Result<ArrayList<Recipe>> recipesR =
+                    RecipeQueries.getRecipes(server, 0, 100);
+
+            if (recipesR.isSuccess()) { // got records
+                ArrayList<Recipe> recipes = recipesR.value();
+                Scanner in = new Scanner(System.in);
+                System.out.println("Which a new recipeID for the recipe: ");
+                String ID = in.nextLine();
+                RecipeQueries.addRecipe(server, ID, recipes);
+                return;
+            } else { // system failure
+                System.out.println(recipesR.error());
+                return;
+            }
+        } while (!action.isBack());*/
+    }
+
+    public static void addRecipeGlobal(Scanner scanner, ServerDB server){
             System.out.println("Enter a RecipeID for the recipe" );
             String recipeID = scanner.nextLine();
             System.out.println("Enter a name for the recipe" );
@@ -192,5 +211,4 @@ public class ManageRecipe {
             RecipeQueries.addRecipe(server,recipe);
             return;
     }
-
 }
