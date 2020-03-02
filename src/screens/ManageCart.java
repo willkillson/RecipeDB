@@ -8,6 +8,8 @@ import db.queries.RecipeQueries;
 import entities.Cart;
 import entities.Recipe;
 import entities.User;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
@@ -26,7 +28,7 @@ public class ManageCart {
         menuOptions = new ArrayList<>();
         menuOptions.add("Go back");
         menuOptions.add("Show Cart");
-        menuOptions.add("Show Stored Recipes");
+        menuOptions.add("Show Current Recipes");
         menuOptions.add("Rate Recipe");
         menuOptions.add("Add Recipe To Cart");
     }
@@ -93,8 +95,14 @@ public class ManageCart {
             Lists all the stored recipes that the user has added.
 
          */
-        System.out.println("TODO Show Stored Recipes");
-        //TODO
+        Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
+        if(maybeRecipes.isSuccess()){
+            ArrayList<Recipe> recipes = maybeRecipes.value();
+            Helpers.printRecipes(recipes);
+        }
+        else{
+            System.out.println(maybeRecipes.error());
+        }
     }
 
     public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
@@ -112,11 +120,11 @@ public class ManageCart {
                     i++;
                     Helpers.showRecipe(recipe);
                 }
-                Scanner in = new Scanner(System.in);
+
                 System.out.println("Which recipe would you like to update the rating for?: ");
-                int recipe = in.nextInt();
+                int recipe = scanner.nextInt();
                 System.out.println("What would you like to update the rating to?: ");
-                int rating = in.nextInt();
+                int rating = scanner.nextInt();
                 Recipe update = recipes.get(recipe);
                 RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
                 return;

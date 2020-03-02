@@ -69,4 +69,12 @@ public class Helpers {
         System.out.println("\tUrl: " + recipe.getUrl());
         System.out.println("\tRating: " + recipe.getRating().get());
     }
+
+    public static void printRecipes(Iterable<Recipe> recipes){
+        System.out.println("Recipes");
+        System.out.println("--------------");
+        for(Recipe rep : recipes){
+            System.out.println(recipes.toString());
+        }
+    }
 }
