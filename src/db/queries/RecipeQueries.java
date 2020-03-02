@@ -155,14 +155,15 @@ public class RecipeQueries {
         PreparedStatement stat = null;
         ResultSet result = null;
 
+
+        //TODO if the recipe is already in ADDS (because we have already reveiewed it once before) then we need
+        //to an update not an insert
         try {
 
-            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, ?, ?, ?)");
+            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
             stat.setString(1, user.getUserId());
             stat.setString(2, recipe.getRecipeId());
-            stat.setDate(3, (java.sql.Date) recipe.getLastCooked());
-            stat.setInt(4, recipe.getTimesCooked());
-            stat.setDouble(5, recipe.getRating().get());
+
             stat.executeUpdate();
             System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
 
@@ -247,8 +248,10 @@ public class RecipeQueries {
 
             stat.setInt(1, rating);
             stat.setString(2, ID);
-
             stat.executeUpdate();
+
+
+
             return;
         } catch (SQLException e) {
             e.printStackTrace();

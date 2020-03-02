@@ -32,6 +32,7 @@ public class ManageCart {
         menuOptions.add("Show Current Recipes");
         menuOptions.add("Rate Recipe");
         menuOptions.add("Add Recipe To Cart");
+        menuOptions.add("Build shopping cart Cart");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -50,13 +51,13 @@ public class ManageCart {
                         showCart(server, user);
                         break;
                     }
-                    case (1)://showStoredRecipes
+                    case (1)://Show current recipes
                     {
                         //TODO
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (2)://rateRecipe
+                    case (2)://Rate recipe
                     {
                         //TODO
                         rateRecipe(scanner, server, user);
@@ -68,6 +69,11 @@ public class ManageCart {
                         addRecipeCart(scanner, server, user);
                         break;
                     }
+                    case (4)://TODO Build cart
+                    {
+                        buildShoppingCart();
+                        break;
+                    }
 
                     default:
                         System.out.println("ERROR: That selection has not been implemented.");
@@ -77,6 +83,10 @@ public class ManageCart {
     }
 
     public static void showCart(ServerDB server, User user) {
+
+
+
+
         Result<Cart> maybeCart = getCart(server, user);
         if (maybeCart.isSuccess()) {
             Cart cart = maybeCart.value();
@@ -172,7 +182,7 @@ public class ManageCart {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
-                    //TODO
+                    //TODO in RecipeQueries.addRecipeCart see note
                     RecipeQueries.addRecipeCart(server,user,action.getSelected());
 
                     System.out.println("Adding recipe: "+action.getSelected().getName());
@@ -186,6 +196,12 @@ public class ManageCart {
         } while (!action.isBack()); // back button exits the screen
 
 
+    }
+
+    public static void buildShoppingCart(){
+        //TODO This function should populate the CONTAINS relationship, see Deliverable 2
+
+        System.out.println("buildShoppingCart() TODO");
     }
 
 

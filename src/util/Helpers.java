@@ -88,7 +88,7 @@ public class Helpers {
         System.out.println("Recipes");
         System.out.println("--------------");
         for(Recipe rep : recipes){
-            System.out.println(recipes.toString());
+            System.out.println(rep.toString());
         }
     }
 }
