@@ -73,8 +73,7 @@ public class RecipeQueries {
                     "select RECIPE.recipeID, RECIPE.name, ADDS.rating, \n" +
                             "RECIPE.url, ADDS.timesCooked, ADDS.lastCooked\n" +
                             "from recipe,ADDS\n" +
-                            "where ADDS.rating IS NULL\n" +
-                            "AND RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
+                            "where RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
                             "From ADDS\n" +
                             "where ADDS.userID = ?);");
 
