@@ -20,7 +20,7 @@ public class IngredientQueries {
 	/**
 	 * Retrieves all ingredients in the database.
 	 */
-	public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server, User user) {
+	public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server) {
 		Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;

@@ -15,6 +15,7 @@ import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with recipes.
+ * Note that these are not user-specific.
  */
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;

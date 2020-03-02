@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Methods for displaying info/actions to the user.
+ */
 public class Helpers {
     public static int displayMenu(Scanner scanner, HashMap<Integer, String> menuOptions) {
         int choice;
@@ -24,6 +27,9 @@ public class Helpers {
         return choice;
     }
 
+    /**
+     * Prints ingredients when NOT requiring the user to select one.
+     */
     public static void printIngredientList(Iterable<Ingredient> ingredients) {
         System.out.println("Ingredients");
         System.out.println("--------------");
@@ -32,6 +38,12 @@ public class Helpers {
         }
     }
 
+    /**
+     * Asks the user if they would like to continue with an action.
+     * 
+     * @param msg the question to be answered
+     * @return true if the actions should be continued, false if not
+     */
     public static boolean displayContinue(Scanner scanner, String msg){
         System.out.println(msg+" (Y)es or (N)o");
         String choice = scanner.nextLine();
@@ -59,7 +71,7 @@ public class Helpers {
     }
 
     /**
-     * prints individual recipe info. This should be expanded to include an option for adding the recipe
+     * Prints individual recipe info. This should be expanded to include an option for adding the recipe
      * to the user list
      *
      * @param recipe

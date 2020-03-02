@@ -1,5 +1,9 @@
 package util;
 
+/**
+ * Literal results from the queries.
+ * @param <T> the type of value held in the result
+ */
 public class Result<T> {
     private T value;
     private String error;
@@ -23,6 +27,9 @@ public class Result<T> {
         return value;
     }
 
+    /**
+     * @return an error message from the specific result
+     */
     public String error() {
         return error;
     }
@@ -31,6 +38,9 @@ public class Result<T> {
         return new Result<T>(true, value, null);
     }
 
+    /**
+     * @return a false (null-typed) result with a pre-made error message
+     */
     public static <T> Result<T> failure(String error) {
         return new Result<T>(false, null, error);
     }
