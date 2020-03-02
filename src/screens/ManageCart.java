@@ -198,11 +198,11 @@ public class ManageCart {
                 if (action.isNext()) {
                     start += increment;
                 } else if (action.isPrevious()) {
-                    start = Math.max(0, start - 10);
+                    start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
                     //TODO
-                    RecipeQueries.addRecipe(server,action.getSelected().getRecipeId(),recipes);
+                    RecipeQueries.addRecipeCart(server,user,action.getSelected());
 
                     System.out.println("Adding recipe: "+action.getSelected().getName());
 
