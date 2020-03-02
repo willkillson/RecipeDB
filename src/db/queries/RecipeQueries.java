@@ -68,7 +68,7 @@ public class RecipeQueries {
      *
      * @param server
      * @param usr
-     * @return
+     * @return all the recipes that the user hasn't rated on.
      */
     public static Result<ArrayList<entities.Recipe>> getAddsRecipes(ServerDB server, User usr){
 
@@ -77,12 +77,13 @@ public class RecipeQueries {
         ResultSet result = null;
         try {
             stat = conn.prepareStatement(
-                    "select RECIPE.recipeID, RECIPE.name, RECIPE.url, \n" +
-                            "ADDS.rating, ADDS.timesCooked, ADDS.lastCooked, ADDS.userID\n" +
-                            "from adds, recipe\n" +
-                            "where adds.recipeID = recipe.recipeID\n" +
-                            "AND ADDS.rating IS NULL " +
-                            "AND adds.userID=?;");
+                    "select RECIPE.recipeID, RECIPE.name, ADDS.rating, \n" +
+                            "RECIPE.url, ADDS.timesCooked, ADDS.lastCooked\n" +
+                            "from recipe,ADDS\n" +
+                            "where ADDS.rating IS NULL\n" +
+                            "AND RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
+                            "From ADDS\n" +
+                            "where ADDS.userID = ?);");
 
             stat.setString(1, usr.getUserId());
 
@@ -266,100 +267,5 @@ public class RecipeQueries {
         }
         System.out.println("There was an error processing your request.");
         return;
-    }
-
-    public static Result<ArrayList<entities.Recipe>> getRecipesRating(
-            ServerDB server, int start, int size, double rate) {
-        Connection conn = server.getConnection();
-        PreparedStatement stat = null;
-        ResultSet result = null;
-        try {
-            stat = conn.prepareStatement(
-                    "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                        "RECIPE.URL as url, Avg(ADDS.rating) as rating, Sum(ADDS.timesCooked) as timesCooked, " +
-                        "Max(ADDS.lastCooked) as lastCooked FROM RECIPE, ADDS " +
-                        "WHERE ADDS.recipeID=RECIPE.recipeID AND rating > ? " +
-                        "GROUP BY RECIPE.recipeID,  RECIPE.name,  RECIPE.url" +
-                        " LIMIT ?, ?;");
-
-            stat.setDouble(1, rate);
-            stat.setInt(2, start);
-            stat.setInt(3, size);
-            String query = stat.toString();
-            result = stat.executeQuery();
-
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
-            return Result.success(recipes);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null) {
-                    result.close();
-                }
-                if (stat != null) {
-                    stat.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return Result.failure("There was an error processing your request. " +
-                "Please contact software developer with the previous output");
-    }
-
-    public static Result<ArrayList<entities.Recipe>> getRecipesCooked(
-            ServerDB server, int start, int size, double rate) {
-        Connection conn = server.getConnection();
-        PreparedStatement stat = null;
-        ResultSet result = null;
-        try {
-            stat = conn.prepareStatement(
-                    "SELECT RECIPE.recipeID as recipeID, RECIPE.name as name,  " +
-                            "RECIPE.URL as url, Avg(ADDS.rating) as rating, ADDS.timesCooked, ADDS.lastCooked FROM RECIPE, ADDS " +
-                            "WHERE ADDS.recipeID=RECIPE.recipeID AND ADDS.timesCooked > ? GROUP BY RECIPE.recipeID LIMIT ?, ?;");
-
-            stat.setDouble(1, rate);
-            stat.setInt(2, start);
-            stat.setInt(3, size);
-
-            result = stat.executeQuery();
-
-            ArrayList<Recipe> recipes = new ArrayList<>();
-            while (result.next()) {
-                String recipeID = result.getString("recipeID");
-                String name = result.getString("name");
-                Double rating = result.getDouble("rating");
-                String url = result.getString("url");
-                int timesCooked = result.getInt("timesCooked");
-                Date lastCooked = result.getDate("lastCooked");
-                recipes.add(new Recipe(recipeID, name, Optional.of(rating), url, timesCooked, lastCooked));
-            }
-            return Result.success(recipes);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null) {
-                    result.close();
-                }
-                if (stat != null) {
-                    stat.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        return Result.failure("There was an error processing your request. " +
-                "Please contact software developer with the previous output");
     }
 }
