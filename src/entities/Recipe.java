@@ -21,6 +21,15 @@ public class Recipe {
         this.lastCooked = lastCooked;
     }
 
+    public Recipe(String recipeID, String name, String URL){
+        this.recipeId = recipeID;
+        this.name = name;
+        this.url = URL;
+        this.rating = null;
+        this.timesCooked = 0;
+        this.lastCooked = null;
+    }
+
     public String getRecipeId() {
         return recipeId;
     }

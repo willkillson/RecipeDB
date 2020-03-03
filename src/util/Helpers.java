@@ -1,8 +1,10 @@
 package util;
 
+import entities.Adds;
 import entities.Ingredient;
 import entities.Recipe;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -84,11 +86,19 @@ public class Helpers {
         System.out.println("\tRating: " + recipe.getRating().get());
     }
 
-    public static void printRecipes(Iterable<Recipe> recipes){
+    public static void printRecipes(ArrayList<Recipe> recipes){
         System.out.println("Recipes");
         System.out.println("--------------");
         for(Recipe rep : recipes){
             System.out.println(rep.toString());
+        }
+    }
+
+    public static void printAdds(ArrayList<Adds> adds){
+        System.out.println("Adds");
+        System.out.println("--------------");
+        for(Adds add : adds){
+            System.out.println(add.toString());
         }
     }
 }
