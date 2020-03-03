@@ -13,32 +13,6 @@ import java.util.Scanner;
  * Methods for displaying info/actions to the user.
  */
 public class Helpers {
-    public static int displayMenu(Scanner scanner, HashMap<Integer, String> menuOptions) {
-        int choice;
-        do {
-            System.out.println("***Menu Items***");
-            for (Map.Entry<Integer, String> entry : menuOptions.entrySet()) {
-                System.out.println(entry.getKey() + ") " + entry.getValue());
-            }
-            choice = scanner.nextInt();
-
-            if (!menuOptions.containsKey(choice)) {
-                System.out.println("ERROR: Please select a valid option!");
-            }
-        } while (!menuOptions.containsKey(choice));
-        return choice;
-    }
-
-    /**
-     * Prints ingredients when NOT requiring the user to select one.
-     */
-    public static void printIngredientList(Iterable<Ingredient> ingredients) {
-        System.out.println("Ingredients");
-        System.out.println("--------------");
-        for (Ingredient ingredient : ingredients) {
-            System.out.println(ingredient.getName());
-        }
-    }
 
     /**
      * Asks the user if they would like to continue with an action.
@@ -74,31 +48,10 @@ public class Helpers {
 
     }
 
-    /**
-     * Prints individual recipe info. This should be expanded to include an option for adding the recipe
-     * to the user list
-     *
-     * @param recipe
-     */
-    public static void showRecipe(Recipe recipe) {
-        System.out.println("Recipe: " + recipe.getName());
-        System.out.println("\tUrl: " + recipe.getUrl());
-        System.out.println("\tRating: " + recipe.getRating().get());
-    }
-
-    public static void printRecipes(ArrayList<Recipe> recipes){
-        System.out.println("Recipes");
-        System.out.println("--------------");
-        for(Recipe rep : recipes){
-            System.out.println(rep.toString());
+    public static <T> void printCollection(ArrayList<T> col){
+        for(int i = 0;i< col.size();i++){
+            System.out.println(col.get(i).toString());
         }
     }
 
-    public static void printAdds(ArrayList<Adds> adds){
-        System.out.println("Adds");
-        System.out.println("--------------");
-        for(Adds add : adds){
-            System.out.println(add.toString());
-        }
-    }
 }

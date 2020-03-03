@@ -75,7 +75,8 @@ public class ManageQueries {
                     } else if (action.isPrevious()) {
                         start = Math.max(0, start - 10);
                     } else if (action.isSelected()) {
-                        Helpers.showRecipe(action.getSelected());
+                        System.out.println(action.getSelected().toString());
+
                     } else { /* isback() handled as exit condition */ }
 
                 } else { // system failure
@@ -114,7 +115,7 @@ public class ManageQueries {
                 } else if (action.isPrevious()) {
                     start = Math.max(0, start - 10);
                 } else if (action.isSelected()) {
-                    Helpers.showRecipe(action.getSelected());
+                    System.out.println(action.getSelected().toString());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure

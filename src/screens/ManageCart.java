@@ -83,7 +83,8 @@ public class ManageCart {
             if (cart.size() == 0) {
                 System.out.println("The cart is empty.");
             } else {
-                Helpers.printIngredientList(cart.getIngredients());
+                
+                Helpers.printCollection((ArrayList<Ingredient>)cart.getIngredients());
             }
         } else {
             System.out.println(maybeCart.error());
@@ -99,7 +100,7 @@ public class ManageCart {
 
 
         ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server,user);
-        Helpers.printAdds(adds);
+        Helpers.printCollection(adds);
 
 
     }

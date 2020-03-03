@@ -89,7 +89,7 @@ public class ManageRecipe {
                 } else if (action.isPrevious()) {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
-                    Helpers.showRecipe(action.getSelected());
+                    System.out.println(action.getSelected().toString());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure
@@ -179,10 +179,9 @@ public class ManageRecipe {
                     } else if (action.isSelected()) {
 
                         boolean isRequired = Helpers.displayContinue("Is this ingredient required?");
-
                         Lists newLists = new Lists(recipeID,action.getSelected().getIngredientId(),isRequired);
-
                         lists.add(newLists);
+
                     } else { /* isback() handled as exit condition */ }
 
                 } else { // system failure
