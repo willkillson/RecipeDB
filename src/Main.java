@@ -76,9 +76,13 @@ public class Main {
 
     public void run() {
         while (true) {
-            User user = ManageUsers.getDefaultUser(server);
+            //User user = ManageUsers.getDefaultUser(server);
+            User user = null;
             SelectAction<String> selected = null;
             do {
+                while(user==null){
+                    user = ManageUsers.view(scanner, server);
+                }
                 // the zero is the index of the exit in menuOptions
                 selected = BackSelect.show(scanner, menuOptions);
                 if (selected.isSelected()) { // valid selection / not back
