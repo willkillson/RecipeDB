@@ -1,8 +1,6 @@
 package screens;
 
 import static db.queries.CupboardQueries.getCupboard;
-import static db.queries.CupboardQueries.addToCupboard;
-import static db.queries.CupboardQueries.removeFromCupboard;
 
 
 import db.ServerDB;

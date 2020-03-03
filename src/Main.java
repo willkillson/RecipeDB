@@ -11,9 +11,7 @@ import screens.ManageQueries;
 import screens.ManageRecipe;
 import util.Result;
 import util.ui.BackSelect;
-import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
-import util.ui.SimpleSelect;
 
 public class Main {
 
