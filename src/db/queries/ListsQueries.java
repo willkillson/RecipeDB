@@ -1,9 +1,7 @@
 package db.queries;
 
 import db.ServerDB;
-import entities.Ingredient;
 import entities.Lists;
-import util.Result;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

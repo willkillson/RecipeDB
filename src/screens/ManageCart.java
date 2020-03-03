@@ -13,7 +13,6 @@ import entities.Lists;
 import entities.Recipe;
 import entities.User;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
@@ -21,7 +20,6 @@ import util.Result;
 import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
-import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with the cart.
@@ -57,11 +55,10 @@ public class ManageCart {
                     }
                     case (1)://Show current recipes
                     {
-                        //TODO
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (2)://TODO Rate recipe
+                    case (2):
                     {
                         rateRecipe( server, user);
                         break;
@@ -222,8 +219,5 @@ public class ManageCart {
 
 
     }
-
-
-
 
 }

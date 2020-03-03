@@ -9,12 +9,8 @@ import util.Result;
 import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
-import util.ui.SimpleSelect;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.Scanner;
 
 public class ManageQueries {

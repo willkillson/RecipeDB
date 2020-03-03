@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import db.ServerDB;
 import entities.Ingredient;
-import entities.User;
 import util.Result;
 
 /**
