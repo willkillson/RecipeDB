@@ -1,14 +1,12 @@
 package db.queries;
 
 import db.ServerDB;
+import entities.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import entities.Ingredient;
-import entities.User;
 import util.Result;
 
 public class UserQueries {
@@ -59,14 +57,14 @@ public class UserQueries {
             "Please contact software developer with the previous output");
     }
 
-    public static ArrayList<User> getUsers(ServerDB server){
+    public static ArrayList<User> getUsers(ServerDB server) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         ArrayList<User> users = new ArrayList<>();
         try {
             stat = conn.prepareStatement("SELECT * "
-                                         + "FROM USER;");
+                + "FROM USER;");
 
             result = stat.executeQuery();
 

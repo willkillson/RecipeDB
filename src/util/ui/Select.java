@@ -82,7 +82,7 @@ public class Select<T> {
         } catch (NumberFormatException e) {
             return Result.failure("'" + input + "' is not a valid action");
         } catch (IndexOutOfBoundsException e) {
-        	return Result.failure("'" + input + "' is not a valid selection");
+            return Result.failure("'" + input + "' is not a valid selection");
         }
     }
 }

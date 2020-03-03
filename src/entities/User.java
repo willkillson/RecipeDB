@@ -33,10 +33,10 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "userId='" + userId + '\'' +
-                ", email='" + email + '\'' +
-                ", cupboardId='" + cupboardId + '\'' +
-                ", cartID='" + cartID + '\'' +
-                '}';
+            "userId='" + userId + '\'' +
+            ", email='" + email + '\'' +
+            ", cupboardId='" + cupboardId + '\'' +
+            ", cartID='" + cartID + '\'' +
+            '}';
     }
 }

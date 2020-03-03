@@ -4,18 +4,14 @@ import static db.queries.UserQueries.verifyUser;
 
 
 import db.ServerDB;
-import db.queries.RecipeQueries;
 import db.queries.UserQueries;
-import entities.Recipe;
 import entities.User;
-import util.Helpers;
+import java.util.ArrayList;
+import java.util.Scanner;
 import util.Result;
 import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
-
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ManageUsers {
     public static ArrayList<String> menuOptions;
@@ -81,11 +77,11 @@ public class ManageUsers {
         return user;
     }
 
-    public static void showAllUsers(ServerDB server){
+    public static void showAllUsers(ServerDB server) {
         System.out.println("TODO showAllUsers");
     }
 
-    public static User selectUser(ServerDB server){
+    public static User selectUser(ServerDB server) {
 
 
         Scanner scanner = new Scanner(System.in);
@@ -109,7 +105,7 @@ public class ManageUsers {
             } else if (action.isPrevious()) {
                 start = Math.max(0, start - increment);
             } else if (action.isSelected()) {
-                System.out.println("Selected user: "+action.getSelected().getUserId());
+                System.out.println("Selected user: " + action.getSelected().getUserId());
                 return action.getSelected();
 
             } else { /* isback() handled as exit condition */ }
@@ -118,8 +114,6 @@ public class ManageUsers {
         } while (!action.isBack()); // back button exits the screen
         return null;
     }
-
-
 
 
 }

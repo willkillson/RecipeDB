@@ -1,17 +1,6 @@
 package util;
 
-import db.ServerDB;
-import db.queries.IngredientQueries;
-import entities.Adds;
-import entities.Ingredient;
-import entities.Lists;
-import entities.Recipe;
-import util.ui.PaginatedSelect;
-import util.ui.SelectAction;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -21,31 +10,28 @@ public class Helpers {
 
     /**
      * Asks the user if they would like to continue with an action.
-     * 
+     *
      * @param msg the question to be answered
      * @return true if the actions should be continued, false if not
      */
-    public static boolean displayContinue(String msg){
+    public static boolean displayContinue(String msg) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(msg+" (Y)es or (N)o");
+        System.out.println(msg + " (Y)es or (N)o");
         String choice = scanner.nextLine();
         choice = choice.toUpperCase();
         boolean cont = true;
 
-        switch(choice){
-            case "N":
-            {
+        switch (choice) {
+            case "N": {
                 cont = false;
                 break;
             }
-            case "Y":
-            {
+            case "Y": {
                 cont = true;
                 break;
             }
-            default:
-            {
+            default: {
                 cont = false;
             }
         }
@@ -53,8 +39,8 @@ public class Helpers {
 
     }
 
-    public static <T> void printCollection(ArrayList<T> col){
-        for(int i = 0;i< col.size();i++){
+    public static <T> void printCollection(ArrayList<T> col) {
+        for (int i = 0; i < col.size(); i++) {
             System.out.println(col.get(i).toString());
         }
     }

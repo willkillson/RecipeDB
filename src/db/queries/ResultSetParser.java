@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class ResultSetParser {
 
-   public static ArrayList<Lists> parseLists(ResultSet result) throws SQLException {
+    public static ArrayList<Lists> parseLists(ResultSet result) throws SQLException {
         ArrayList<Lists> lists = new ArrayList<>();
         while (result.next()) {
             lists.add(parseList(result));
@@ -30,7 +30,7 @@ public class ResultSetParser {
         ingredientID = result.getString("ingredientID");
         isRequired = result.getBoolean("isRequired");
 
-        return new Lists(recipeID,ingredientID,isRequired);
+        return new Lists(recipeID, ingredientID, isRequired);
     }
 
     public static ArrayList<Ingredient> parseIngredients(ResultSet result) throws SQLException {
