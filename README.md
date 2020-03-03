@@ -1,4 +1,4 @@
-# SER322
+# SER322 - Deliverable 4 - mySQL Recipe Program
 *David, Kevin, Anna, Kelly*
 
 # Command line arguments
