@@ -179,7 +179,6 @@ public class ManageCart {
                 } else if (action.isSelected()) {
 
                     RecipeQueries.addRecipeCart(server,user,action.getSelected());
-                    System.out.println("Adding recipe: "+action.getSelected().getName());
 
                 } else { /* isback() handled as exit condition */ }
 

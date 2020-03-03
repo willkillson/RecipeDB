@@ -208,14 +208,19 @@ public class RecipeQueries {
         //to an update not an insert
         try {
 
-            //ArrayList<Adds> adds = getAddsRecipe(server,user);
+            ArrayList<Adds> adds = getAddsRecipe(server,user);
+            if(!Adds.contains(recipe,adds)){
+                stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
+                stat.setString(1, user.getUserId());
+                stat.setString(2, recipe.getRecipeId());
 
-            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
-            stat.setString(1, user.getUserId());
-            stat.setString(2, recipe.getRecipeId());
+                stat.executeUpdate();
+                System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
+            }
+            else{
+                System.out.println("User already has recipe.");
+            }
 
-            stat.executeUpdate();
-            System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
 
 
 
