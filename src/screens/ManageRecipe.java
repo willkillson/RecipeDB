@@ -68,7 +68,7 @@ public class ManageRecipe {
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, start, increment);
+                RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
@@ -104,7 +104,7 @@ public class ManageRecipe {
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, start, increment);
+                RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
@@ -123,8 +123,12 @@ public class ManageRecipe {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
-                    RecipeQueries.deleteRecipe(server, action.getSelected());
-                    System.out.println("Deleted " + action.getSelected().getName());
+                    Result deleted = RecipeQueries.deleteRecipe(server, action.getSelected());
+                    if (deleted.isSuccess()) {
+                        System.out.println("Deleted " + action.getSelected().getName());
+                    } else {
+                        System.out.println(deleted.error());
+                    }
 
                 } else { /* isback() handled as exit condition */ }
 
@@ -182,8 +186,8 @@ public class ManageRecipe {
                 }
             } while (!action.isBack()); // back button exits the screen
 
-            RecipeQueries.addRecipe(server, recipe, lists);
-
+            Result r = RecipeQueries.addRecipe(server, recipe, lists);
+            if (r.isFailure()) System.out.println(r.error());
         }
 
         return;

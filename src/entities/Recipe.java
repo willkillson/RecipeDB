@@ -12,7 +12,8 @@ public class Recipe {
     private int timesCooked;
     private Date lastCooked;
 
-    public Recipe(String recipeId, String name, Optional<Double> rating, String url, int timesCooked, Date lastCooked) {
+    public Recipe(String recipeId, String name, Optional<Double> rating,
+                  String url, int timesCooked, Date lastCooked) {
         this.recipeId = recipeId;
         this.name = name;
         this.rating = rating;

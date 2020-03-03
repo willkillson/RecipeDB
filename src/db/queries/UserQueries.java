@@ -57,19 +57,23 @@ public class UserQueries {
             "Please contact software developer with the previous output");
     }
 
-    public static ArrayList<User> getUsers(ServerDB server) {
+    /**
+     * Gets all users
+     * @param server database
+     * @return a list of users
+     */
+    public static Result<ArrayList<User>> getUsers(ServerDB server) {
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
-        ArrayList<User> users = new ArrayList<>();
+
         try {
-            stat = conn.prepareStatement("SELECT * "
-                + "FROM USER;");
+            stat = conn.prepareStatement("SELECT * FROM USER;");
 
             result = stat.executeQuery();
 
-            users = ResultSetParser.parseUsers(result);
-            return users;
+            ArrayList<User> users = ResultSetParser.parseUsers(result);
+            return Result.success(users);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,8 +89,8 @@ public class UserQueries {
                 se.printStackTrace();
             }
         }
-        return users;
-
+        return Result.failure("There was an error processing your request. " +
+            "Please contact software developer with the previous output");
     }
 
 }

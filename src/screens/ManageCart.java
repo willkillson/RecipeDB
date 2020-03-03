@@ -101,10 +101,10 @@ public class ManageCart {
          */
 
 
-        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server, user);
-        Helpers.printCollection(adds);
-
-
+        Result<ArrayList<Adds>> adds = RecipeQueries.getAddsRecipe(server, user);
+        if (adds.isSuccess()) {
+            Helpers.printCollection(adds.value());
+        } else System.out.println(adds.error());
     }
 
     public static void rateRecipe(ServerDB server, User user) {
@@ -115,7 +115,7 @@ public class ManageCart {
         SelectAction<Recipe> action;
         do {
             //Get records
-            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getRecipes(server, start, increment);
+            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getRecipesRange(server, start, increment);
 
             if (maybeRecipes.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = maybeRecipes.value();
@@ -134,7 +134,10 @@ public class ManageCart {
                     System.out.println("Which recipe would you like to update the rating for?: ");
                     String rating = scanner.nextLine();
                     System.out.println("What would you like to update the rating to?: ");
-                    RecipeQueries.updateRecipe(server, user, action.getSelected(), Float.parseFloat(rating));
+                    Result updated = RecipeQueries.updateRecipe(server, user, action.getSelected(), Float.parseFloat(rating));
+                    if (updated.isFailure()) {
+                        System.out.println(updated.error());
+                    }
 
                 } else { /* isback() handled as exit condition */ }
 
@@ -162,7 +165,7 @@ public class ManageCart {
         SelectAction<Recipe> action;
         do {
             //Get records
-            Result<ArrayList<Recipe>> recipesR = RecipeQueries.getRecipes(server, start, increment);
+            Result<ArrayList<Recipe>> recipesR = RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
@@ -181,7 +184,13 @@ public class ManageCart {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
-                    RecipeQueries.addRecipeCart(server, user, action.getSelected());
+                    Result add = RecipeQueries.addRecipeCart(server, user, action.getSelected());
+                    if (add.isSuccess()) {
+                        System.out.println("Recipe: " + action.getSelected().getRecipeId() +
+                            " added to " + user.getUserId() + "'s recipe cart");
+                    } else {
+                        System.out.println(add.error());
+                    }
 
                 } else { /* isback() handled as exit condition */ }
 
@@ -204,25 +213,27 @@ public class ManageCart {
         //This function should populate the CONTAINS relationship, see Deliverable 2
 
         //1. remove everything that is in our current contains relationship
-        ContainsQueries.clearContainsRelations(server, user);
+        Result r = ContainsQueries.clearContainsRelations(server, user);
+        if (r.isFailure()) System.out.println(r);
 
         //2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
-        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server, user);
+        Result<ArrayList<Adds>> addsR = RecipeQueries.getAddsRecipe(server, user);
+        if (addsR.isSuccess()) {
+            // build a recipe list
+            ArrayList<String> recipeIDs = new ArrayList<>();
+            for (Adds add : addsR.value()) {
+                recipeIDs.add(add.recipeID);
+            }
 
-        // build a recipe list
-        ArrayList<String> recipeIDs = new ArrayList<>();
-        for (Adds add : adds) {
-            recipeIDs.add(add.recipeID);
-        }
+            //fetch the lists relations with selected recipeID
+            Result<ArrayList<Lists>> lists = ListsQueries.getLists(server, recipeIDs);
 
-        //fetch the lists relations with selected recipeID
-        Result<ArrayList<Lists>> lists = ListsQueries.getLists(server, recipeIDs);
-
-        // add contains relationships or print error
-        if (lists.isSuccess()) {
-            ContainsQueries.insertContainsRelations(server, user, lists.value());
-        } else {
-            System.out.println(lists.error());
-        }
+            // add contains relationships or print error
+            if (lists.isSuccess()) {
+                ContainsQueries.insertContainsRelations(server, user, lists.value());
+            } else {
+                System.out.println(lists.error());
+            }
+        } else System.out.println(addsR.isFailure());
     }
 }
