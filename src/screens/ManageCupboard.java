@@ -65,7 +65,8 @@ public class ManageCupboard {
             if (cupboard.size() == 0) {
                 System.out.println("The cupboard is empty.");
             } else {
-                Helpers.printIngredientList(cupboard.getIngredients());
+
+                Helpers.printCollection((ArrayList<Ingredient>)cupboard.getIngredients());
             }
         } else {
             System.out.println(maybeCupboard.error());

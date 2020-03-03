@@ -89,7 +89,7 @@ public class ManageRecipe {
                 } else if (action.isPrevious()) {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
-                    Helpers.showRecipe(action.getSelected());
+                    System.out.println(action.getSelected().toString());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure
@@ -141,18 +141,13 @@ public class ManageRecipe {
 
     public static void addRecipeGlobal(ServerDB server){
 
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Lists> lists = new ArrayList<>();
+
         if(Helpers.displayContinue("Do you have all the ingredients in the system already?")){
-            Scanner scanner = new Scanner(System.in);
 
-            System.out.println("Enter a RecipeID for the recipe" );
-            String recipeID = scanner.nextLine();
-            System.out.println("Enter a name for the recipe" );
-            String name = scanner.nextLine();
-            System.out.println("Enter a URL for the recipe" );
-            String URL = scanner.nextLine();
-            Recipe recipe = new Recipe(recipeID,name,null,URL,0,null);
+            Recipe recipe = addRecipeGlobal_recipePrompt();
 
-            ArrayList<Lists> lists = new ArrayList<>();
             System.out.println("Select ingredients that belong to the recipe");
 
             final int increment = 5;
@@ -179,10 +174,9 @@ public class ManageRecipe {
                     } else if (action.isSelected()) {
 
                         boolean isRequired = Helpers.displayContinue("Is this ingredient required?");
-
-                        Lists newLists = new Lists(recipeID,action.getSelected().getIngredientId(),isRequired);
-
+                        Lists newLists = new Lists(recipe.getRecipeId(),action.getSelected().getIngredientId(),isRequired);
                         lists.add(newLists);
+
                     } else { /* isback() handled as exit condition */ }
 
                 } else { // system failure
@@ -197,4 +191,17 @@ public class ManageRecipe {
 
         return;
     }
+
+    private static Recipe addRecipeGlobal_recipePrompt(){
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter a RecipeID for the recipe" );
+        String recipeID = scanner.nextLine();
+        System.out.println("Enter a name for the recipe" );
+        String name = scanner.nextLine();
+        System.out.println("Enter a URL for the recipe" );
+        String URL = scanner.nextLine();
+        return new Recipe(recipeID,name,null,URL,0,null);
+    }
+
 }

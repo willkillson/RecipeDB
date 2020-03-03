@@ -48,7 +48,7 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return getName();
+        return "Name: " + getName()+" Id: "+getRecipeId()+" Url: "+getUrl();
     }
 
     public int getTimesCooked() {
