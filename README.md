@@ -21,7 +21,7 @@
   * Add Recipe To Cart - Adds a reicpe to the cart
   * Build Shopping Cart Cart - Builds a shopping cart
 * Manage Recipes
-  * Show All Recipes - Displays all recipe's in the database
+  * Show All Recipes - Displays all recipes in the database
   * Add Recipe To Global Recipes - Adds a recipe to the database
   * Delete Recipe - Deletes a recipe from the database
 * Manage Queries
