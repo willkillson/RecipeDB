@@ -1,6 +1,7 @@
 package db.queries;
 
 import db.ServerDB;
+import entities.Adds;
 import entities.Lists;
 import entities.Recipe;
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import entities.User;
 import util.Result;
@@ -50,33 +52,31 @@ public class RecipeQueries {
             "Please contact software developer with the previous output");
     }
 
-    /**
-     *
-     * @param server
-     * @param usr
-     * @return all the recipes that the user hasn't rated on.
-     */
-    public static Result<ArrayList<entities.Recipe>> getAddsRecipes(ServerDB server, User usr){
+
+    public static ArrayList<Recipe> getRecipes(ServerDB server){
+
 
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
+        ArrayList<Recipe> recipes = new ArrayList<>();
+
         try {
             stat = conn.prepareStatement(
-                    "select RECIPE.recipeID, RECIPE.name, ADDS.rating, \n" +
-                            "RECIPE.url, ADDS.timesCooked, ADDS.lastCooked\n" +
-                            "from recipe,ADDS\n" +
-                            "where RECIPE.recipeID in(SELECT ADDS.recipeID\n" +
-                            "From ADDS\n" +
-                            "where ADDS.userID = ?);");
-
-            stat.setString(1, usr.getUserId());
+                    "select * \n"+
+                            "FROM RECIPE;");
 
 
             result = stat.executeQuery();
+            while(result.next()){
+               String rId =  result.getString("recipeID");
+               String rName =  result.getString("name");
+               String URL =  result.getString("URL");
+               Recipe recipe = new Recipe(rId,rName,URL);
+               recipes.add(recipe);
+            }
 
-            ArrayList<Recipe> recipes = ResultSetParser.parseRecipes(result);
-            return Result.success(recipes);
+            return recipes;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -91,8 +91,66 @@ public class RecipeQueries {
                 se.printStackTrace();
             }
         }
-        return Result.failure("There was an error processing your request. " +
-                "Please contact software developer with the previous output");
+        return recipes;
+    }
+
+    /**
+     *
+     * @param server
+     * @param usr
+     * @return all the recipes that the user hasn't rated on.
+     */
+    public static ArrayList<Adds> getAddsRecipe(ServerDB server, User usr){
+
+
+        ArrayList<Recipe> allRecipes = getRecipes(server);
+        ArrayList<Adds> adds = new ArrayList<>();
+
+        Connection conn = server.getConnection();
+        PreparedStatement stat = null;
+        ResultSet result = null;
+        try {
+
+            for(int i = 0;i< allRecipes.size();i++){
+                stat = conn.prepareStatement(
+                        "select * \n"+
+                                "FROM ADDS " +
+                                "WHERE ADDS.userID = ? " +
+                                "AND ADDS.recipeID = ?;");
+
+                stat.setString(1, usr.getUserId());
+                stat.setString(2, allRecipes.get(i).getRecipeId());
+                result = stat.executeQuery();
+
+                if(result.next()){
+                    String userId = result.getString("userID");
+                    String recipeID = result.getString("recipeID");
+                    Integer timesCooked = result.getInt("timesCooked");
+                    Date lastCooked = result.getDate("lastCooked");
+                    Double rating = result.getDouble("rating");
+                    Adds a = new Adds(userId,recipeID,lastCooked,timesCooked,rating);
+                    adds.add(a);
+                }
+
+
+
+            }
+            return adds;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        return adds;
 
     }
 
@@ -149,23 +207,17 @@ public class RecipeQueries {
         //if the recipe is already in ADDS (because we have already reveiewed it once before) then we need
         //to an update not an insert
         try {
-            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
-            if(maybeRecipes.isSuccess()){
-                ArrayList<Recipe> recipes = maybeRecipes.value();
-                if(recipes.contains(recipe)){
-                    //then we need to perform an update
-                    System.out.println("Recipe is already added.");
-                }
-                else{
-                    //we need to perform an insertion
-                    stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
-                    stat.setString(1, user.getUserId());
-                    stat.setString(2, recipe.getRecipeId());
 
-                    stat.executeUpdate();
-                    System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
-                }
-            }
+            //ArrayList<Adds> adds = getAddsRecipe(server,user);
+
+            stat = conn.prepareStatement("INSERT INTO ADDS VALUES(?, ?, null, 0, null)");
+            stat.setString(1, user.getUserId());
+            stat.setString(2, recipe.getRecipeId());
+
+            stat.executeUpdate();
+            System.out.println("Recipe: " + recipe.getRecipeId() + " added to "+user.getUserId()+"'s recipe cart");
+
+
 
 
         } catch (SQLException e) {

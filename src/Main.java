@@ -4,7 +4,7 @@ import entities.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import screens.Login;
+import screens.ManageUsers;
 import screens.ManageCart;
 import screens.ManageCupboard;
 import screens.ManageQueries;
@@ -71,15 +71,18 @@ public class Main {
         menuOptions.add("Cart");
         menuOptions.add("Manage recipes");
         menuOptions.add("Manage queries");
+        menuOptions.add("Manage Users");
     }
 
     public void run() {
         while (true) {
-            User user = Login.getUser(server);
-            System.out.println("\nWelcome " + user.getEmail());
-
+            //User user = ManageUsers.getDefaultUser(server);
+            User user = null;
             SelectAction<String> selected = null;
             do {
+                while(user==null){
+                    user = ManageUsers.view(scanner, server);
+                }
                 // the zero is the index of the exit in menuOptions
                 selected = BackSelect.show(scanner, menuOptions);
                 if (selected.isSelected()) { // valid selection / not back
@@ -88,16 +91,30 @@ public class Main {
                     int index = menuOptions.indexOf(selectionText);
                     switch (index) {
                         case (0):
-                            ManageCupboard.view(scanner, server, user);
-                            break;
+                            {
+                                ManageCupboard.view(scanner, server, user);
+                                break;
+                            }
                         case (1):
-                            ManageCart.view(scanner, server, user);
-                            break;
+                            {
+                                ManageCart.view(scanner, server, user);
+                                break;
+                            }
                         case (2):
-                            ManageRecipe.view(scanner, server, user);
-                            break;
+                            {
+                                ManageRecipe.view(scanner, server, user);
+                                break;
+                            }
                         case (3):
-                            ManageQueries.view(scanner, server, user);
+                            {
+                                ManageQueries.view(scanner, server, user);
+                                break;
+                            }
+                        case (4):
+                            {
+                                user = ManageUsers.view(scanner, server);
+                                break;
+                            }
                         default:
                             System.out.println("ERROR: That selection has not been implemented.");
                     }

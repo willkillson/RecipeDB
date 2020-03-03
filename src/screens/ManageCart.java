@@ -8,10 +8,7 @@ import db.queries.CartQueries;
 import db.queries.ContainsQueries;
 import db.queries.ListsQueries;
 import db.queries.RecipeQueries;
-import entities.Cart;
-import entities.Lists;
-import entities.Recipe;
-import entities.User;
+import entities.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -34,7 +31,6 @@ public class ManageCart {
         menuOptions.add("Show Current Recipes");
         menuOptions.add("Rate Recipe");
         menuOptions.add("Add Recipe To Cart");
-        menuOptions.add("Build shopping cart Cart");
     }
 
     public static void view(Scanner scanner, ServerDB server, User user) {
@@ -100,14 +96,12 @@ public class ManageCart {
             Lists all the stored recipes that the user has added.
 
          */
-        Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getAddsRecipes(server,user);
-        if(maybeRecipes.isSuccess()){
-            ArrayList<Recipe> recipes = maybeRecipes.value();
-            Helpers.printRecipes(recipes);
-        }
-        else{
-            System.out.println(maybeRecipes.error());
-        }
+
+
+        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server,user);
+        Helpers.printAdds(adds);
+
+
     }
 
     public static void rateRecipe(ServerDB server, User user) {
@@ -205,11 +199,12 @@ public class ManageCart {
         CartQueries.clearContainsRelation(server,user);
 
         //2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
-        ArrayList<Recipe> recipes = RecipeQueries.getAddsRecipes(server, user).value();
+        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server, user);
 
         ArrayList<String> recipeIDs = new ArrayList<>();
-        for(int i = 0;i< recipes.size();i++){
-            recipeIDs.add(recipes.get(i).getRecipeId());
+        for(int i = 0;i< adds.size();i++){
+
+            recipeIDs.add(adds.get(i).recipeID);
         }
 
         //now we have our lists
