@@ -87,29 +87,32 @@ public class ManageUsers {
         Scanner scanner = new Scanner(System.in);
         int increment = 5;
         int start = 0;
-        SelectAction<User> action;
+        SelectAction<User> action = SelectAction.Back();
 
         do {
             //Get records
-            ArrayList<User> users = UserQueries.getUsers(server);
+            Result<ArrayList<User>> usersR = UserQueries.getUsers(server);
+            if (usersR.isSuccess()) {
+                ArrayList<User> users = usersR.value();
+                boolean hasPrevious = start > 0;
+                boolean hasNext = users.size() == increment;
 
-            boolean hasPrevious = start > 0;
-            boolean hasNext = users.size() == increment;
+                // get customer request
+                action = PaginatedSelect.show(scanner, users, hasPrevious, hasNext);
 
-            // get customer request
-            action = PaginatedSelect.show(scanner, users, hasPrevious, hasNext);
+                // handle the request
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+                    System.out.println("Selected user: " + action.getSelected().getUserId());
+                    return action.getSelected();
 
-            // handle the request
-            if (action.isNext()) {
-                start += increment;
-            } else if (action.isPrevious()) {
-                start = Math.max(0, start - increment);
-            } else if (action.isSelected()) {
-                System.out.println("Selected user: " + action.getSelected().getUserId());
-                return action.getSelected();
-
-            } else { /* isback() handled as exit condition */ }
-
+                } else { /* isback() handled as exit condition */ }
+            } else {
+                System.out.println(usersR.error());
+            }
 
         } while (!action.isBack()); // back button exits the screen
         return null;
