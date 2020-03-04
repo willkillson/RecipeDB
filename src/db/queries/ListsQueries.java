@@ -9,21 +9,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import util.Result;
 
+/**
+ * Query regarding the LISTS table in the database.
+ * LISTS keeps the ingredients in a recipe.
+ */
 public class ListsQueries {
 
     /**
-     * Retrieves the lists relation for all recipe ids requested
-     * @param server database
+     * Retrieves the LISTS relation for all recipeIDs requested.
+     * 
+     * @param server 	database
      * @param recipeIDs to fetch
-     * @return a master list of all lists relations, or
+     * @return a master list of all LISTS relations or an error
      */
     public static Result<ArrayList<Lists>> getLists(ServerDB server, ArrayList<String> recipeIDs) {
-        Connection conn = server.getConnection();
+        // set up connection
+    	Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         ArrayList<Lists> lists = new ArrayList<>();
         try {
-            // add each recipe to the LISTS
+            // create query to add each recipe to lists
             for (String recipeID : recipeIDs) {
                 stat = conn.prepareStatement("SELECT LISTS.recipeID, LISTS.ingredientID, LISTS.isRequired " +
                     "FROM LISTS " +
@@ -35,6 +41,7 @@ public class ListsQueries {
                 lists.addAll(ResultSetParser.parseLists(result));
             }
 
+            // return the list of LISTS relations
             return Result.success(lists);
         } catch (SQLException e) {
             e.printStackTrace();

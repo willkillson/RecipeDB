@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * Methods regarding parsing parts of the database to be used elsewhere.
+ */
 public class ResultSetParser {
 
     /**
-     * parses a list of lists relation
-     * @param result
-     * @return
+     * Parses a list of LISTS relation.
+     * 
+     * @param result	to be parsed
+     * @return the parsed list
      * @throws SQLException
      */
     public static ArrayList<Lists> parseLists(ResultSet result) throws SQLException {
@@ -29,9 +33,10 @@ public class ResultSetParser {
 
 
     /**
-     * parses the lists relation
-     * @param result
-     * @return
+     * Parses the LISTS relation.
+     * 
+     * @param result	to be parsed
+     * @return list
      * @throws SQLException
      */
     public static Lists parseList(ResultSet result) throws SQLException {
@@ -49,9 +54,10 @@ public class ResultSetParser {
 
 
     /**
-     * parses a list of ingredients
-     * @param result
-     * @return
+     * Parses a list of ingredients.
+     * 
+     * @param result	to be parsed
+     * @return the parsed list
      * @throws SQLException
      */
     public static ArrayList<Ingredient> parseIngredients(ResultSet result) throws SQLException {
@@ -63,9 +69,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses an ingredients
-     * @param result
-     * @return
+     * Parses an ingredient.
+     * 
+     * @param result	to be parsed
+     * @return ingredient
      * @throws SQLException
      */
     public static Ingredient parseIngredient(ResultSet result) throws SQLException {
@@ -75,9 +82,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a list of users
-     * @param result
-     * @return
+     * Parses a list of users.
+     * 
+     * @param result	to be parsed
+     * @return the parsed list
      * @throws SQLException
      */
     public static ArrayList<User> parseUsers(ResultSet result) throws SQLException {
@@ -89,9 +97,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a user
-     * @param result
-     * @return
+     * Parses a user.
+     * 
+     * @param result	to be parsed
+     * @return user
      * @throws SQLException
      */
     public static User parseUser(ResultSet result) throws SQLException {
@@ -103,9 +112,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a list of recipes
-     * @param result
-     * @return
+     * Parses a list of recipes.
+     * 
+     * @param result	to be parsed
+     * @return the parsed list
      * @throws SQLException
      */
     public static ArrayList<Recipe> parseRecipes(ResultSet result) throws SQLException {
@@ -117,9 +127,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a recipe
-     * @param result
-     * @return
+     * Parses a recipe.
+     * 
+     * @param result	to be parsed
+     * @return recipe
      * @throws SQLException
      */
     public static Recipe parseRecipe(ResultSet result) throws SQLException {
@@ -130,9 +141,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a list of recipes with extra information
-     * @param result
-     * @return
+     * Parses a list of recipes with extra information.
+     * 
+     * @param result	to be parsed
+     * @return the parsed list
      * @throws SQLException
      */
     public static ArrayList<Recipe> parseAugmentedRecipes(ResultSet result) throws SQLException {
@@ -144,9 +156,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a recipe with extra information
-     * @param result
-     * @return
+     * Parses a recipe with extra information.
+     * 
+     * @param result	to be parsed
+     * @return recipe
      * @throws SQLException
      */
     public static Recipe parseAugmentedRecipe(ResultSet result) throws SQLException {
@@ -160,9 +173,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses a list of the Adds relation
-     * @param result
-     * @return
+     * Parses a list of the Adds relation.
+     * 
+     * @param result	to be parsed
+     * @return	the parsed list
      * @throws SQLException
      */
     public static ArrayList<Adds> parseAddsList(ResultSet result) throws SQLException {
@@ -174,9 +188,10 @@ public class ResultSetParser {
     }
 
     /**
-     * parses an Adds relation
-     * @param result
-     * @return
+     * Parses an Adds relation.
+     * 
+     * @param result	to be parsed
+     * @return Adds relation
      * @throws SQLException
      */
     public static Adds parseAdds(ResultSet result) throws SQLException {
