@@ -1,7 +1,8 @@
 package entities;
 
 /**
- * Lists entity object to store mySQL data for lists
+ * LISTS relation from the database.
+ * LISTS is connecting ingredients to recipes.
  */
 public class Lists {
     public String recipeID;

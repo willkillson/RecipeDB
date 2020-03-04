@@ -1,7 +1,7 @@
 package entities;
 
 /**
- * Substitute entity to store substitutes from the mySQL database
+ * Substitute entity to store ingredient substitutes from the mySQL database
  */
 public class Substitute {
     public String ingredientID;

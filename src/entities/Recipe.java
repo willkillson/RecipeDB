@@ -4,9 +4,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
-
 /**
- * Entity object for Recipes that are pulled from the mySQL database
+ * Entity object for Recipes that are pulled from the mySQL database.
  */
 public class Recipe {
     private String recipeId;

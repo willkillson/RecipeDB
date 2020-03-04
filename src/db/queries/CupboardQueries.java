@@ -14,17 +14,21 @@ import util.Result;
  * Queries regarding a user's cupboard.
  */
 public class CupboardQueries {
+	
     /**
      * Retrieves cupboard of the user from the database.
      *
+     * @param server 	database
+     * @param user   	whose cupboard to get
      * @return cupboard if successful, error if not
      */
     public static Result<entities.Cupboard> getCupboard(ServerDB server, User user) {
+    	// set up connection
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
-            // pull the cupboard
+            // create query to pull the cupboard
             stat = conn.prepareStatement(
                 "SELECT STORES.ingredientID as ingredientID, INGREDIENT.name as name\n" +
                     "FROM USER, STORES, INGREDIENT\n" +
@@ -35,10 +39,14 @@ public class CupboardQueries {
 
             stat.setString(1, user.getUserId());
             stat.setString(2, user.getCupboardId());
+            
+            // execute query
             result = stat.executeQuery();
 
-            // build cupboard
+            // build result list
             ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
+            
+            // build cupboard
             return Result.success(new entities.Cupboard(user.getCupboardId(), ingredients));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,10 +68,11 @@ public class CupboardQueries {
 
     /**
      * Adds an ingredient to the cupboard of the user in the database.
-     * @param server database
-     * @param user to add to
-     * @param ingredientId to add
-     * @return success if successful, error if failure.
+     * 
+     * @param server 		database
+     * @param user 			to add to
+     * @param ingredientId	to add
+     * @return success or error
      */
     public static Result addToCupboard(ServerDB server, User user, String ingredientId) {
         Connection conn = server.getConnection();
@@ -95,10 +104,11 @@ public class CupboardQueries {
 
     /**
      * Removes an ingredient from the cupboard of the user in the database.
-     * @param server database
-     * @param user to remove ingredient from
-     * @param ingredientId to remove
-     * @return succss or error
+     * 
+     * @param server 		database
+     * @param user 			whose cupboard to remove ingredient from
+     * @param ingredientId 	to remove
+     * @return success or error
      */
     public static Result removeFromCupboard(ServerDB server, User user, String ingredientId) {
         Connection conn = server.getConnection();
