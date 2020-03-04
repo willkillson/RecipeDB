@@ -10,18 +10,25 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import util.Result;
 
+/**
+ * Queries regarding a user's cart.
+ */
 public class CartQueries {
 
     /**
      * Retrieves cart of the user from the database.
      *
+     * @param server	database
+     * @param user		whose cart to get
      * @return cart if successful, error if not
      */
     public static Result<entities.Cart> getCart(ServerDB server, User user) {
+        // set up connection
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
+            // create query to pull the cart
             stat = conn.prepareStatement(
                 "SELECT CONTAINS.ingredientID as ingredientID, INGREDIENT.name as name\n" +
                     "FROM USER, STORES, INGREDIENT, CONTAINS\n" +
@@ -33,15 +40,14 @@ public class CartQueries {
 
             stat.setString(1, user.getUserId());
             stat.setString(2, user.getCartId());
-            String thing = stat.toString();
+
+            // execute query
             result = stat.executeQuery();
 
-            ArrayList<Ingredient> ingredients = new ArrayList<>();
-            while (result.next()) {
-                String ingredientID = result.getString("ingredientID");
-                String name = result.getString("name");
-                ingredients.add(new Ingredient(ingredientID, name));
-            }
+            // build result list
+            ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
+
+            // build cart
             return Result.success(new entities.Cart(user.getCartId(), ingredients));
         } catch (SQLException e) {
             e.printStackTrace();

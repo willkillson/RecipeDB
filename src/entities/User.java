@@ -1,5 +1,8 @@
 package entities;
 
+/**
+ * A user in the database.
+ */
 public class User {
     private String userId;
     private String email;
@@ -29,5 +32,13 @@ public class User {
         return userId;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+            "userId='" + userId + '\'' +
+            ", email='" + email + '\'' +
+            ", cupboardId='" + cupboardId + '\'' +
+            ", cartID='" + cartID + '\'' +
+            '}';
+    }
 }

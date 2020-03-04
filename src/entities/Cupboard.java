@@ -22,24 +22,25 @@ public class Cupboard {
         return cupboardId;
     }
 
-    public ArrayList<String> getIngredientNames(){
+    public ArrayList<String> getIngredientNames() {
         ArrayList<String> retArray = new ArrayList<>();
-        for(int i = 0;i< ingredients.size();i++){
+        for (int i = 0; i < ingredients.size(); i++) {
             retArray.add(this.ingredients.get(i).getName());
         }
         return retArray;
     }
 
-    public Ingredient getIngredient(int index){
+    public Ingredient getIngredient(int index) {
         return this.ingredients.get(index);
     }
 
     /**
-     * Returns whether the cupboard contains a certain ingredient
-     * @param oIngredient
-     * @return
+     * Returns whether the cupboard contains a certain ingredient.
+     *
+     * @param oIngredient	to check for
+     * @return true or false
      */
-    public boolean contains(Ingredient oIngredient){
+    public boolean contains(Ingredient oIngredient) {
         return ingredients.contains(oIngredient);
     }
 

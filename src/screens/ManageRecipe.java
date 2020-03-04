@@ -1,29 +1,31 @@
 package screens;
 
 import db.ServerDB;
+import db.queries.IngredientQueries;
 import db.queries.RecipeQueries;
+import entities.Ingredient;
+import entities.Lists;
 import entities.Recipe;
 import entities.User;
 import java.util.ArrayList;
 import java.util.Scanner;
+import util.Helpers;
 import util.Result;
+import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
-import util.ui.SimpleSelect;
 
 /**
  * Displays to the user and completes the actions associated with recipes.
+ * Note that these are not user-specific.
  */
 public class ManageRecipe {
     public static ArrayList<String> menuOptions;
 
     static {
         menuOptions = new ArrayList<>();
-        menuOptions.add("Go back");
         menuOptions.add("Show All Recipes");
-        menuOptions.add("Show Stored Recipes");
-        menuOptions.add("Rate Recipe");
-        menuOptions.add("Add Recipe To Cart");
+        menuOptions.add("Add Recipe To Global Recipes");
         menuOptions.add("Delete Recipe");
     }
 
@@ -31,35 +33,24 @@ public class ManageRecipe {
         SelectAction<String> selected = null;
         do {
             // display menu
-            selected = SimpleSelect.show(scanner, menuOptions, 0);
+            selected = BackSelect.show(scanner, menuOptions);
             if (selected.isSelected()) { // valid selection
                 // get selected index
                 String selectionText = selected.getSelected();
                 int index = menuOptions.indexOf(selectionText);
                 // process options
                 switch (index) {
-                    case (1):
-                        showAllRecipes(scanner, server, user);
+                    case (0)://Show All Recipes
+                        showAllRecipes(server);
                         break;
-                    case (2):
-                    {
-                        //TODO
-                        showStoredRecipes();
-                        break;
-                    }
-                    case (3):
-                        rateRecipe(scanner, server, user);
-                    case (4):
-                    {
-                        //TODO
-                        addRecipeCart();
-                        break;
-                    }
-                    case (5):
-                    {
 
-                        //TODO
-                        deleteRecipeCart();
+                    case (1): {
+                        addRecipeGlobal(server);
+                        break;
+                    }
+                    case (2)://TODO Delete Recipe
+                    {
+                        deleteRecipe(server);
                         break;
                     }
                     default:
@@ -69,14 +60,15 @@ public class ManageRecipe {
         } while (!selected.isBack()); // exit
     }
 
-    public static void showAllRecipes(Scanner scanner, ServerDB server, User user) {
-        final int increment = 5;
+    public static void showAllRecipes(ServerDB server) {
+        Scanner scanner = new Scanner(System.in);
+        int increment = 5;
         int start = 0;
         SelectAction<Recipe> action;
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, start, increment);
+                RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
@@ -92,9 +84,9 @@ public class ManageRecipe {
                 if (action.isNext()) {
                     start += increment;
                 } else if (action.isPrevious()) {
-                    start = Math.max(0, start - 10);
+                    start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
-                    showRecipe(action.getSelected());
+                    System.out.println(action.getSelected().toString());
                 } else { /* isback() handled as exit condition */ }
 
             } else { // system failure
@@ -104,98 +96,113 @@ public class ManageRecipe {
         } while (!action.isBack()); // back button exits the screen
     }
 
-    /**
-     * prints individual recipe info. This should be expanded to include an option for adding the recipe
-     * to the user list
-     *
-     * @param recipe
-     */
-    public static void showRecipe(Recipe recipe) {
-        System.out.println("Recipe: " + recipe.getName());
-        System.out.println("\tUrl: " + recipe.getUrl());
-        System.out.println("\tRating: " + recipe.getRating().get());
-    }
-
-    public static void rateRecipe(Scanner scanner, ServerDB server, User user) {
+    public static void deleteRecipe(ServerDB server) {
+        Scanner scanner = new Scanner(System.in);
+        int increment = 5;
+        int start = 0;
         SelectAction<Recipe> action;
         do {
             //Get records
             Result<ArrayList<Recipe>> recipesR =
-                RecipeQueries.getRecipes(server, 0, 100);
+                RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
-                int i =0;
-                for (Recipe recipe : recipes) {
-                    System.out.println(i);
-                    i++;
-                    showRecipe(recipe);
-                }
-                Scanner in = new Scanner(System.in);
-                System.out.println("Which recipe would you like to update the rating for?: ");
-                int recipe = in.nextInt();
-                System.out.println("What would you like to update the rating to?: ");
-                int rating = in.nextInt();
-                Recipe update = recipes.get(recipe);
-                RecipeQueries.updateRecipe(server, update.getRecipeId(), recipes, rating);
-                return;
+                // figure out if we're on either the upper or lower bound and
+                // enable options accordingly
+                boolean hasPrevious = start > 0;
+                boolean hasNext = recipes.size() == increment;
+
+                // get customer request
+                action = PaginatedSelect.show(scanner, recipes, hasPrevious, hasNext);
+
+                // handle the request
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+
+                    Result deleted = RecipeQueries.deleteRecipe(server, action.getSelected());
+                    if (deleted.isSuccess()) {
+                        System.out.println("Deleted " + action.getSelected().getName());
+                    } else {
+                        System.out.println(deleted.error());
+                    }
+
+                } else { /* isback() handled as exit condition */ }
+
             } else { // system failure
                 System.out.println(recipesR.error());
                 return;
             }
-        } while (!action.isBack());
+        } while (!action.isBack()); // back button exits the screen
+
     }
 
-    public static void showStoredRecipes(){
-        /*
+    public static void addRecipeGlobal(ServerDB server) {
 
-            Lists all the stored recipes that the user has added.
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Lists> lists = new ArrayList<>();
 
-         */
-        System.out.println("TODO Show Stored Recipes");
-        //TODO
+        if (Helpers.displayContinue("Do you have all the ingredients in the system already?")) {
+
+            Recipe recipe = addRecipeGlobal_recipePrompt();
+
+            System.out.println("Select ingredients that belong to the recipe");
+
+            final int increment = 5;
+            int start = 0;
+
+            SelectAction<Ingredient> action;
+            do {
+                //Get records
+                Result<ArrayList<Ingredient>> maybeIngredients = IngredientQueries.getIngredients(server);
+
+                if (maybeIngredients.isSuccess()) { // got records
+                    ArrayList<Ingredient> ingredients = maybeIngredients.value();
+
+                    boolean hasPrevious = start > 0;
+                    boolean hasNext = ingredients.size() == increment;
+
+                    action = PaginatedSelect.show(scanner, ingredients, hasPrevious, hasNext);
+
+                    // handle the request
+                    if (action.isNext()) {
+                        start += increment;
+                    } else if (action.isPrevious()) {
+                        start = Math.max(0, start - increment);
+                    } else if (action.isSelected()) {
+
+                        boolean isRequired = Helpers.displayContinue("Is this ingredient required?");
+                        Lists newLists = new Lists(recipe.getRecipeId(), action.getSelected().getIngredientId(), isRequired);
+                        lists.add(newLists);
+
+                    } else { /* isback() handled as exit condition */ }
+
+                } else { // system failure
+                    System.out.println(maybeIngredients.error());
+                    return;
+                }
+            } while (!action.isBack()); // back button exits the screen
+
+            Result r = RecipeQueries.addRecipe(server, recipe, lists);
+            if (r.isFailure()) System.out.println(r.error());
+        }
+
+        return;
     }
 
-    public static void addRecipeCart(){
-        /*
+    private static Recipe addRecipeGlobal_recipePrompt() {
+        Scanner scanner = new Scanner(System.in);
 
-            Adds a recipe by ID from a list of recipes.
-
-            We should list all the recipes, before asking which recipe they would like to add.
-
-         */
-        System.out.println("TODO Add Recipe To Cart");
-        //TODO
+        System.out.println("Enter a RecipeID for the recipe");
+        String recipeID = scanner.nextLine();
+        System.out.println("Enter a name for the recipe");
+        String name = scanner.nextLine();
+        System.out.println("Enter a URL for the recipe");
+        String URL = scanner.nextLine();
+        return new Recipe(recipeID, name, null, URL, 0, null);
     }
 
-    public static void deleteRecipeCart(){
-        /*
-
-            Removes a recipe from a user.
-
-         */
-        System.out.println("TODO Delete Recipe");
-        //TODO
-    }
-
-    /**public static void addRecipe(Scanner scanner, ServerDB server, User user) {
-     SelectAction<Recipe> action;
-     do {
-     //Get records
-     Result<ArrayList<Recipe>> recipesR =
-     RecipeQueries.getRecipes(server, 0, 100);
-
-     if (recipesR.isSuccess()) { // got records
-     ArrayList<Recipe> recipes = recipesR.value();
-     Scanner in = new Scanner(System.in);
-     System.out.println("Which a new recipeID for the recipe: ");
-     String ID = in.nextLine();
-     RecipeQueries.addRecipe(server, ID, recipes);
-     return;
-     } else { // system failure
-     System.out.println(recipesR.error());
-     return;
-     }
-     } while (!action.isBack());
-     }**/
 }

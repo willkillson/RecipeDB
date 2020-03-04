@@ -1,14 +1,12 @@
 package db.queries;
 
+import db.ServerDB;
+import entities.Ingredient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import db.ServerDB;
-import entities.Ingredient;
-import entities.User;
 import util.Result;
 
 /**
@@ -17,26 +15,28 @@ import util.Result;
  */
 public class IngredientQueries {
 
-	/**
-	 * Retrieves all ingredients in the database.
-	 */
-	public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server, User user) {
-		Connection conn = server.getConnection();
+    /**
+     * Retrieves all ingredients in the database.
+     * 
+     * @param server 	database
+     * @return All ingredients or an error
+     */
+    public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server) {
+    	// set up connection
+    	Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
-        	stat = conn.prepareStatement("SELECT ingredientID, name "
-        			+ "FROM INGREDIENT");
-        	
-        	result = stat.executeQuery();
-        	
-        	ArrayList<Ingredient> ingredients = new ArrayList<>();
-            while (result.next()) {
-                String ingredientID = result.getString("ingredientID");
-                String name = result.getString("name");
-                ingredients.add(new Ingredient(ingredientID, name));
-            }
-        	return Result.success(ingredients);
+        	// create query to get all ingredients
+            stat = conn.prepareStatement("SELECT ingredientID, name "
+                + "FROM INGREDIENT");
+
+            // execute query
+            result = stat.executeQuery();
+            
+            // build result list
+            ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
+            return Result.success(ingredients);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -54,6 +54,4 @@ public class IngredientQueries {
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
     }
-
-    
 }
