@@ -4,14 +4,25 @@ import entities.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import screens.ManageUsers;
 import screens.ManageCart;
 import screens.ManageCupboard;
 import screens.ManageQueries;
 import screens.ManageRecipe;
+import screens.ManageUsers;
 import util.Result;
 import util.ui.BackSelect;
 import util.ui.SelectAction;
+
+/**
+ * Main method for Recipe/Ingredient mySQL database management ~ Queries
+ *
+ * By: David, Kelly, Kevin, Anna
+ * Deliverable 4 - SER322
+ *
+ * Main calls on different management screens based on User input. From those Screens,
+ *  Queries are called and objects are filled with data based on queries and user interaction
+ *
+ */
 
 public class Main {
 
@@ -63,6 +74,9 @@ public class Main {
         }
     }
 
+    /**
+     * stores menu options in an ArrayList
+     */
     public static ArrayList<String> menuOptions;
 
     static {
@@ -80,7 +94,7 @@ public class Main {
             User user = null;
             SelectAction<String> selected = null;
             do {
-                while(user==null){
+                while (user == null) {
                     user = ManageUsers.view(scanner, server);
                 }
                 // the zero is the index of the exit in menuOptions
@@ -90,31 +104,26 @@ public class Main {
                     String selectionText = selected.getSelected();
                     int index = menuOptions.indexOf(selectionText);
                     switch (index) {
-                        case (0):
-                            {
-                                ManageCupboard.view(scanner, server, user);
-                                break;
-                            }
-                        case (1):
-                            {
-                                ManageCart.view(scanner, server, user);
-                                break;
-                            }
-                        case (2):
-                            {
-                                ManageRecipe.view(scanner, server, user);
-                                break;
-                            }
-                        case (3):
-                            {
-                                ManageQueries.view(scanner, server, user);
-                                break;
-                            }
-                        case (4):
-                            {
-                                user = ManageUsers.view(scanner, server);
-                                break;
-                            }
+                        case (0): {
+                            ManageCupboard.view(scanner, server, user);
+                            break;
+                        }
+                        case (1): {
+                            ManageCart.view(scanner, server, user);
+                            break;
+                        }
+                        case (2): {
+                            ManageRecipe.view(scanner, server, user);
+                            break;
+                        }
+                        case (3): {
+                            ManageQueries.view(scanner, server, user);
+                            break;
+                        }
+                        case (4): {
+                            user = ManageUsers.view(scanner, server);
+                            break;
+                        }
                         default:
                             System.out.println("ERROR: That selection has not been implemented.");
                     }

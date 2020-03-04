@@ -4,12 +4,15 @@ import static db.queries.CartQueries.getCart;
 
 
 import db.ServerDB;
-import db.queries.CartQueries;
 import db.queries.ContainsQueries;
 import db.queries.ListsQueries;
 import db.queries.RecipeQueries;
-import entities.*;
-
+import entities.Adds;
+import entities.Cart;
+import entities.Ingredient;
+import entities.Lists;
+import entities.Recipe;
+import entities.User;
 import java.util.ArrayList;
 import java.util.Scanner;
 import util.Helpers;
@@ -33,6 +36,13 @@ public class ManageCart {
         menuOptions.add("Add Recipe To Cart");
     }
 
+
+    /**
+     * Method to view the menu for ManageCart
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -54,9 +64,8 @@ public class ManageCart {
                         showStoredRecipes(server, user);
                         break;
                     }
-                    case (2):
-                    {
-                        rateRecipe( server, user);
+                    case (2): {
+                        rateRecipe(server, user);
                         break;
                     }
                     case (3)://addRecipeCart
@@ -71,10 +80,16 @@ public class ManageCart {
         } while (!selected.isBack());
     }
 
+
+    /**
+     * method to show the current users cart
+     * @param server
+     * @param user
+     */
     public static void showCart(ServerDB server, User user) {
 
         //builds our cart
-        buildShoppingCart(server,user);
+        buildShoppingCart(server, user);
 
 
         Result<Cart> maybeCart = getCart(server, user);
@@ -83,15 +98,21 @@ public class ManageCart {
             if (cart.size() == 0) {
                 System.out.println("The cart is empty.");
             } else {
-                
-                Helpers.printCollection((ArrayList<Ingredient>)cart.getIngredients());
+
+                Helpers.printCollection((ArrayList<Ingredient>) cart.getIngredients());
             }
         } else {
             System.out.println(maybeCart.error());
         }
     }
 
-    public static void showStoredRecipes(ServerDB server, User user){
+
+    /**
+     * method to show the stored recipe for a user
+     * @param server
+     * @param user
+     */
+    public static void showStoredRecipes(ServerDB server, User user) {
         /*
 
             Lists all the stored recipes that the user has added.
@@ -99,12 +120,18 @@ public class ManageCart {
          */
 
 
-        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server,user);
-        Helpers.printCollection(adds);
-
-
+        Result<ArrayList<Adds>> adds = RecipeQueries.getAddsRecipe(server, user);
+        if (adds.isSuccess()) {
+            Helpers.printCollection(adds.value());
+        } else System.out.println(adds.error());
     }
 
+
+    /**
+     * Method to rate a recipe. Calls a query to execute SQL update.
+     * @param server
+     * @param user
+     */
     public static void rateRecipe(ServerDB server, User user) {
         Scanner scanner = new Scanner(System.in);
 
@@ -113,7 +140,7 @@ public class ManageCart {
         SelectAction<Recipe> action;
         do {
             //Get records
-            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getRecipes(server, start, increment);
+            Result<ArrayList<Recipe>> maybeRecipes = RecipeQueries.getRecipesRange(server, start, increment);
 
             if (maybeRecipes.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = maybeRecipes.value();
@@ -132,7 +159,10 @@ public class ManageCart {
                     System.out.println("Which recipe would you like to update the rating for?: ");
                     String rating = scanner.nextLine();
                     System.out.println("What would you like to update the rating to?: ");
-                    RecipeQueries.updateRecipe(server,user, action.getSelected(), Float.parseFloat(rating));
+                    Result updated = RecipeQueries.updateRecipe(server, user, action.getSelected(), Float.parseFloat(rating));
+                    if (updated.isFailure()) {
+                        System.out.println(updated.error());
+                    }
 
                 } else { /* isback() handled as exit condition */ }
 
@@ -143,7 +173,13 @@ public class ManageCart {
         } while (!action.isBack()); // back button exits the screen
     }
 
-    public static void addRecipeCart(Scanner scanner, ServerDB server, User user){
+    /**
+     * Method to add a recipe to the cart
+     * @param scanner
+     * @param server
+     * @param user
+     */
+    public static void addRecipeCart(Scanner scanner, ServerDB server, User user) {
         /*
 
             Adds a recipe by ID from a list of recipes.
@@ -160,7 +196,7 @@ public class ManageCart {
         SelectAction<Recipe> action;
         do {
             //Get records
-            Result<ArrayList<Recipe>> recipesR = RecipeQueries.getRecipes(server, start, increment);
+            Result<ArrayList<Recipe>> recipesR = RecipeQueries.getRecipesRange(server, start, increment);
 
             if (recipesR.isSuccess()) { // got records
                 ArrayList<Recipe> recipes = recipesR.value();
@@ -179,7 +215,13 @@ public class ManageCart {
                     start = Math.max(0, start - increment);
                 } else if (action.isSelected()) {
 
-                    RecipeQueries.addRecipeCart(server,user,action.getSelected());
+                    Result add = RecipeQueries.addRecipeCart(server, user, action.getSelected());
+                    if (add.isSuccess()) {
+                        System.out.println("Recipe: " + action.getSelected().getRecipeId() +
+                            " added to " + user.getUserId() + "'s recipe cart");
+                    } else {
+                        System.out.println(add.error());
+                    }
 
                 } else { /* isback() handled as exit condition */ }
 
@@ -192,27 +234,37 @@ public class ManageCart {
 
     }
 
-    public static void buildShoppingCart(ServerDB server, User user){
+    /**
+     * Builds a new shopping cart for a user
+     *
+     * @param server databse
+     * @param user   to rebuild
+     */
+    public static void buildShoppingCart(ServerDB server, User user) {
         //This function should populate the CONTAINS relationship, see Deliverable 2
 
         //1. remove everything that is in our current contains relationship
-        CartQueries.clearContainsRelation(server,user);
+        Result r = ContainsQueries.clearContainsRelations(server, user);
+        if (r.isFailure()) System.out.println(r);
 
         //2. update our contains relationship   ADDS -> LISTS -> INGREDIENTS   map this to CONTAINS
-        ArrayList<Adds> adds = RecipeQueries.getAddsRecipe(server, user);
+        Result<ArrayList<Adds>> addsR = RecipeQueries.getAddsRecipe(server, user);
+        if (addsR.isSuccess()) {
+            // build a recipe list
+            ArrayList<String> recipeIDs = new ArrayList<>();
+            for (Adds add : addsR.value()) {
+                recipeIDs.add(add.recipeID);
+            }
 
-        ArrayList<String> recipeIDs = new ArrayList<>();
-        for(int i = 0;i< adds.size();i++){
+            //fetch the lists relations with selected recipeID
+            Result<ArrayList<Lists>> lists = ListsQueries.getLists(server, recipeIDs);
 
-            recipeIDs.add(adds.get(i).recipeID);
-        }
-
-        //now we have our lists
-        ArrayList<ArrayList<Lists>> lists = ListsQueries.getLists(server,recipeIDs);
-
-        ContainsQueries.updateContains(server,user,lists);
-
-
+            // add contains relationships or print error
+            if (lists.isSuccess()) {
+                ContainsQueries.insertContainsRelations(server, user, lists.value());
+            } else {
+                System.out.println(lists.error());
+            }
+        } else System.out.println(addsR.isFailure());
     }
-
 }

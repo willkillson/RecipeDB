@@ -4,19 +4,20 @@ import static db.queries.UserQueries.verifyUser;
 
 
 import db.ServerDB;
-import db.queries.RecipeQueries;
 import db.queries.UserQueries;
-import entities.Recipe;
 import entities.User;
-import util.Helpers;
+import java.util.ArrayList;
+import java.util.Scanner;
 import util.Result;
 import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 
-import java.util.ArrayList;
-import java.util.Scanner;
 
+/**
+ * ManageUsers
+ * Class to manage users in the database, and call UserQueries
+ */
 public class ManageUsers {
     public static ArrayList<String> menuOptions;
 
@@ -47,6 +48,12 @@ public class ManageUsers {
         return null;
     }
 
+
+    /**
+     * getsDefaultUser
+     * @param server
+     * @return User
+     */
     public static User getDefaultUser(ServerDB server) {
 
         User user = null;
@@ -81,45 +88,52 @@ public class ManageUsers {
         return user;
     }
 
-    public static void showAllUsers(ServerDB server){
+    public static void showAllUsers(ServerDB server) {
         System.out.println("TODO showAllUsers");
     }
 
-    public static User selectUser(ServerDB server){
+
+    /**
+     *
+     * @param server
+     * @return selected User
+     */
+    public static User selectUser(ServerDB server) {
 
 
         Scanner scanner = new Scanner(System.in);
         int increment = 5;
         int start = 0;
-        SelectAction<User> action;
+        SelectAction<User> action = SelectAction.Back();
 
         do {
             //Get records
-            ArrayList<User> users = UserQueries.getUsers(server);
+            Result<ArrayList<User>> usersR = UserQueries.getUsers(server);
+            if (usersR.isSuccess()) {
+                ArrayList<User> users = usersR.value();
+                boolean hasPrevious = start > 0;
+                boolean hasNext = users.size() == increment;
 
-            boolean hasPrevious = start > 0;
-            boolean hasNext = users.size() == increment;
+                // get customer request
+                action = PaginatedSelect.show(scanner, users, hasPrevious, hasNext);
 
-            // get customer request
-            action = PaginatedSelect.show(scanner, users, hasPrevious, hasNext);
+                // handle the request
+                if (action.isNext()) {
+                    start += increment;
+                } else if (action.isPrevious()) {
+                    start = Math.max(0, start - increment);
+                } else if (action.isSelected()) {
+                    System.out.println("Selected user: " + action.getSelected().getUserId());
+                    return action.getSelected();
 
-            // handle the request
-            if (action.isNext()) {
-                start += increment;
-            } else if (action.isPrevious()) {
-                start = Math.max(0, start - increment);
-            } else if (action.isSelected()) {
-                System.out.println("Selected user: "+action.getSelected().getUserId());
-                return action.getSelected();
-
-            } else { /* isback() handled as exit condition */ }
-
+                } else { /* isback() handled as exit condition */ }
+            } else {
+                System.out.println(usersR.error());
+            }
 
         } while (!action.isBack()); // back button exits the screen
         return null;
     }
-
-
 
 
 }

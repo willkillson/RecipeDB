@@ -18,10 +18,12 @@ public class CartQueries {
      * @return cart if successful, error if not
      */
     public static Result<entities.Cart> getCart(ServerDB server, User user) {
+        // set up connection
         Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
+            // create query
             stat = conn.prepareStatement(
                 "SELECT CONTAINS.ingredientID as ingredientID, INGREDIENT.name as name\n" +
                     "FROM USER, STORES, INGREDIENT, CONTAINS\n" +
@@ -33,11 +35,14 @@ public class CartQueries {
 
             stat.setString(1, user.getUserId());
             stat.setString(2, user.getCartId());
-            String thing = stat.toString();
+
+            // execute query
             result = stat.executeQuery();
 
+            // build result list
             ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
 
+            // build cart
             return Result.success(new entities.Cart(user.getCartId(), ingredients));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,33 +60,5 @@ public class CartQueries {
         }
         return Result.failure("There was an error processing your request. " +
             "Please contact software developer with the previous output");
-    }
-
-    public static void clearContainsRelation(ServerDB server, User user){
-        Connection conn = server.getConnection();
-        PreparedStatement stat = null;
-        ResultSet result = null;
-        try {
-
-            stat = conn.prepareStatement("DELETE FROM CONTAINS WHERE CONTAINS.cartID=?;");
-            stat.setString(1, user.getCartId());
-            stat.executeUpdate();
-
-            return;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null) {
-                    result.close();
-                }
-                if (stat != null) {
-                    stat.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
-        }
-        System.out.println("There was an error processing your request.");
     }
 }

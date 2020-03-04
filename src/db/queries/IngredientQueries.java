@@ -1,13 +1,12 @@
 package db.queries;
 
+import db.ServerDB;
+import entities.Ingredient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import db.ServerDB;
-import entities.Ingredient;
 import util.Result;
 
 /**
@@ -16,21 +15,23 @@ import util.Result;
  */
 public class IngredientQueries {
 
-	/**
-	 * Retrieves all ingredients in the database.
-	 */
-	public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server) {
-		Connection conn = server.getConnection();
+    /**
+     * Retrieves all ingredients in the database.
+     * @param server database
+     * @return All ingredients, or an error
+     */
+    public static Result<ArrayList<entities.Ingredient>> getIngredients(ServerDB server) {
+        Connection conn = server.getConnection();
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
-        	stat = conn.prepareStatement("SELECT ingredientID, name "
-        			+ "FROM INGREDIENT");
-        	
-        	result = stat.executeQuery();
-        	
-        	ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
-        	return Result.success(ingredients);
+            stat = conn.prepareStatement("SELECT ingredientID, name "
+                + "FROM INGREDIENT");
+
+            result = stat.executeQuery();
+            // build list
+            ArrayList<Ingredient> ingredients = ResultSetParser.parseIngredients(result);
+            return Result.success(ingredients);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

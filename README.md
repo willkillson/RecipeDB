@@ -1,6 +1,8 @@
 # SER322 - Deliverable 4 - mySQL Recipe Program
 *David, Kevin, Anna, Kelly*
 
+[![Deliverable 4 Video](https://img.youtube.com/vi/fGKemSJCnwc/0.jpg)](https://youtu.be/fGKemSJCnwc)
+
 # Command line arguments
 
 \<ipaddress> \<dbname> \<drivername> \<dbadminName> \<dbadminPassword>
@@ -27,6 +29,8 @@
 * Manage Queries
   * Rating Query - Queries recipes based on a minimal rating
   * Times Cooked Query - Displays recipes based on the times cooked by a user
+* Manage Users
+  * Select User - Change between Users in the mySQL Database
 
 # Cupboard Menu Example
 ![](https://i.ibb.co/qBtbVk0/Screen-Shot-2020-03-02-at-6-15-18-PM.png)
