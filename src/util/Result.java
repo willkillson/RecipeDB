@@ -2,6 +2,7 @@ package util;
 
 /**
  * Literal results from the queries.
+ *
  * @param <T> the type of value held in the result
  */
 public class Result<T> {

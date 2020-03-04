@@ -12,13 +12,23 @@ public class Recipe {
     private int timesCooked;
     private Date lastCooked;
 
-    public Recipe(String recipeId, String name, Optional<Double> rating, String url, int timesCooked, Date lastCooked) {
+    public Recipe(String recipeId, String name, Optional<Double> rating,
+                  String url, int timesCooked, Date lastCooked) {
         this.recipeId = recipeId;
         this.name = name;
         this.rating = rating;
         this.url = url;
         this.timesCooked = timesCooked;
         this.lastCooked = lastCooked;
+    }
+
+    public Recipe(String recipeID, String name, String URL) {
+        this.recipeId = recipeID;
+        this.name = name;
+        this.url = URL;
+        this.rating = null;
+        this.timesCooked = 0;
+        this.lastCooked = null;
     }
 
     public String getRecipeId() {
@@ -29,9 +39,13 @@ public class Recipe {
         return name;
     }
 
-    public Optional<Double> getRating() { return rating; }
+    public Optional<Double> getRating() {
+        return rating;
+    }
 
-    public void setRating(double rating) { this.rating = Optional.of(rating); }
+    public void setRating(double rating) {
+        this.rating = Optional.of(rating);
+    }
 
     public String getUrl() {
         return url;
@@ -39,7 +53,7 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return getName();
+        return "Name: " + getName() + " Id: " + getRecipeId() + " Url: " + getUrl();
     }
 
     public int getTimesCooked() {
@@ -53,8 +67,12 @@ public class Recipe {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Recipe recipe = (Recipe) o;
         return Objects.equals(recipeId, recipe.recipeId);
     }

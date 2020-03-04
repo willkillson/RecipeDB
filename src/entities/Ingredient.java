@@ -9,7 +9,7 @@ public class Ingredient {
 
     public Ingredient(String ingredientId, String name) {
         this.ingredientId = ingredientId;
-    	this.name = name;
+        this.name = name;
     }
 
     public String getName() {
@@ -21,15 +21,21 @@ public class Ingredient {
     }
 
     @Override
-public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-    Ingredient that = (Ingredient) o;
+        Ingredient that = (Ingredient) o;
 
-    if (ingredientId != null ? !ingredientId.equals(that.ingredientId) : that.ingredientId != null) return false;
-    return name != null ? name.equals(that.name) : that.name == null;
-}
+        if (ingredientId != null ? !ingredientId.equals(that.ingredientId) : that.ingredientId != null) {
+            return false;
+        }
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
 
     @Override
     public int hashCode() {
@@ -40,6 +46,6 @@ public boolean equals(Object o) {
 
     @Override
     public String toString() {
-        return "Name: "+ name+" Id: "+ingredientId;
+        return "Name: " + name + " Id: " + ingredientId;
     }
 }
