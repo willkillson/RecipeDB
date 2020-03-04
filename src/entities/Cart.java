@@ -9,15 +9,28 @@ public class Cart {
     private String cartId;
     private ArrayList<Ingredient> ingredients;
 
+    /**
+     * Cart Method
+     * @param cartId
+     * @param ingredients
+     */
     public Cart(String cartId, ArrayList<Ingredient> ingredients) {
         this.cartId = cartId;
         this.ingredients = ingredients;
     }
 
+    /**
+     * getIngredients method
+     * @return
+     */
     public Iterable<Ingredient> getIngredients() {
         return ingredients;
     }
 
+    /**
+     * getter for CartID
+     * @return
+     */
     public String getCartId() {
         return cartId;
     }
