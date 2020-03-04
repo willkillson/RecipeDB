@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A recipe in the database.
+ */
 public class Recipe {
     private String recipeId;
     private String name;

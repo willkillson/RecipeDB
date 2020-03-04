@@ -35,10 +35,10 @@ public class Cupboard {
     }
 
     /**
-     * Returns whether the cupboard contains a certain ingredient
+     * Returns whether the cupboard contains a certain ingredient.
      *
-     * @param oIngredient
-     * @return
+     * @param oIngredient	to check for
+     * @return true or false
      */
     public boolean contains(Ingredient oIngredient) {
         return ingredients.contains(oIngredient);

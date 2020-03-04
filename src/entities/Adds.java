@@ -3,6 +3,10 @@ package entities;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * ADDs relation from the database.
+ * ADDS is when a user adds a recipe (already in the database) to their cart.
+ */
 public class Adds {
 
     String userID;
@@ -27,7 +31,13 @@ public class Adds {
                 " Rating: " + rating;
     }
 
-
+    /**
+     * Returns whether the cart contains a certain recipe.
+     * 
+     * @param recipe	to check for
+     * @param adds		the list of the user's ADDS relations to be compared to
+     * @return true or false
+     */
     public static boolean contains(Recipe recipe, ArrayList<Adds> adds) {
         boolean ret = false;
 
