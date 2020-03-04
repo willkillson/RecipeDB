@@ -15,6 +15,14 @@ public class Adds {
     Integer timesCooked;
     Double rating;
 
+    /**
+     * Adds method
+     * @param userID
+     * @param recipeID
+     * @param lastCooked
+     * @param timesCooked
+     * @param rating
+     */
     public Adds(String userID, String recipeID, Date lastCooked, Integer timesCooked, Double rating) {
         this.userID = userID;
         this.recipeID = recipeID;
@@ -23,6 +31,10 @@ public class Adds {
         this.rating = rating;
     }
 
+    /**
+     * prings an ADDs
+     * @return
+     */
     @Override
     public String toString() {
         return

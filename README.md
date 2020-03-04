@@ -3,6 +3,8 @@
 
 [![Deliverable 4 Video](https://img.youtube.com/vi/fGKemSJCnwc/0.jpg)](https://youtu.be/fGKemSJCnwc)
 
+https://youtu.be/fGKemSJCnwc
+
 # Command line arguments
 
 \<ipaddress> \<dbname> \<drivername> \<dbadminName> \<dbadminPassword>

@@ -29,6 +29,12 @@ public class ManageRecipe {
         menuOptions.add("Delete Recipe");
     }
 
+    /**
+     * method to view the ManageRecipe menu
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -60,6 +66,11 @@ public class ManageRecipe {
         } while (!selected.isBack()); // exit
     }
 
+
+    /**
+     * Method to show all recipes
+     * @param server
+     */
     public static void showAllRecipes(ServerDB server) {
         Scanner scanner = new Scanner(System.in);
         int increment = 5;
@@ -96,6 +107,11 @@ public class ManageRecipe {
         } while (!action.isBack()); // back button exits the screen
     }
 
+
+    /**
+     * method to delete a recipe
+     * @param server
+     */
     public static void deleteRecipe(ServerDB server) {
         Scanner scanner = new Scanner(System.in);
         int increment = 5;
@@ -140,6 +156,11 @@ public class ManageRecipe {
 
     }
 
+
+    /**
+     * Method to add a recipe to the global user recipe list
+     * @param server
+     */
     public static void addRecipeGlobal(ServerDB server) {
 
         Scanner scanner = new Scanner(System.in);
@@ -193,6 +214,11 @@ public class ManageRecipe {
         return;
     }
 
+
+    /**
+     * prompt to receive inputs for inserting a new global recipe
+     * @return
+     */
     private static Recipe addRecipeGlobal_recipePrompt() {
         Scanner scanner = new Scanner(System.in);
 

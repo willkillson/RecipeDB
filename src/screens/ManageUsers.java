@@ -13,6 +13,11 @@ import util.ui.BackSelect;
 import util.ui.PaginatedSelect;
 import util.ui.SelectAction;
 
+
+/**
+ * ManageUsers
+ * Class to manage users in the database, and call UserQueries
+ */
 public class ManageUsers {
     public static ArrayList<String> menuOptions;
 
@@ -43,6 +48,12 @@ public class ManageUsers {
         return null;
     }
 
+
+    /**
+     * getsDefaultUser
+     * @param server
+     * @return User
+     */
     public static User getDefaultUser(ServerDB server) {
 
         User user = null;
@@ -81,6 +92,12 @@ public class ManageUsers {
         System.out.println("TODO showAllUsers");
     }
 
+
+    /**
+     *
+     * @param server
+     * @return selected User
+     */
     public static User selectUser(ServerDB server) {
 
 

@@ -31,6 +31,13 @@ public class ManageCupboard {
         menuOptions.add("Delete Ingredient");
     }
 
+
+    /**
+     * method to view the menu for ManageCupboard
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -58,6 +65,12 @@ public class ManageCupboard {
         } while (!selected.isBack());
     }
 
+
+    /**
+     * Method to show the current users cupboard
+     * @param server
+     * @param user
+     */
     public static void showCupboard(ServerDB server, User user) {
         Result<Cupboard> maybeCupboard = getCupboard(server, user);
         if (maybeCupboard.isSuccess()) {
@@ -73,6 +86,13 @@ public class ManageCupboard {
         }
     }
 
+
+    /**
+     * method to add an ingredient to a cupboard. Calls a query to execute SQL query
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void addIngredient(Scanner scanner, ServerDB server, User user) {
 
 
@@ -129,6 +149,13 @@ public class ManageCupboard {
         return;
     }
 
+
+    /**
+     * Method to remove an ingredient from the cupboard
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void removeIngredient(Scanner scanner, ServerDB server, User user) {
 
         // : ... see above addIngredient()
