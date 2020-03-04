@@ -36,6 +36,13 @@ public class ManageCart {
         menuOptions.add("Add Recipe To Cart");
     }
 
+
+    /**
+     * Method to view the menu for ManageCart
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void view(Scanner scanner, ServerDB server, User user) {
         SelectAction<String> selected = null;
         do {
@@ -73,6 +80,12 @@ public class ManageCart {
         } while (!selected.isBack());
     }
 
+
+    /**
+     * method to show the current users cart
+     * @param server
+     * @param user
+     */
     public static void showCart(ServerDB server, User user) {
 
         //builds our cart
@@ -93,6 +106,12 @@ public class ManageCart {
         }
     }
 
+
+    /**
+     * method to show the stored recipe for a user
+     * @param server
+     * @param user
+     */
     public static void showStoredRecipes(ServerDB server, User user) {
         /*
 
@@ -107,6 +126,12 @@ public class ManageCart {
         } else System.out.println(adds.error());
     }
 
+
+    /**
+     * Method to rate a recipe. Calls a query to execute SQL update.
+     * @param server
+     * @param user
+     */
     public static void rateRecipe(ServerDB server, User user) {
         Scanner scanner = new Scanner(System.in);
 
@@ -148,6 +173,12 @@ public class ManageCart {
         } while (!action.isBack()); // back button exits the screen
     }
 
+    /**
+     * Method to add a recipe to the cart
+     * @param scanner
+     * @param server
+     * @param user
+     */
     public static void addRecipeCart(Scanner scanner, ServerDB server, User user) {
         /*
 
