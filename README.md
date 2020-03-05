@@ -1,6 +1,3 @@
-# SER322 - Deliverable 4 - mySQL Recipe Program
-*David, Kevin, Anna, Kelly*
-
 [![Deliverable 4 Video](https://img.youtube.com/vi/fGKemSJCnwc/0.jpg)](https://youtu.be/fGKemSJCnwc)
 
 https://youtu.be/fGKemSJCnwc
